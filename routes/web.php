@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
@@ -9,13 +10,16 @@ use App\Http\Controllers\Admin\PengajuanMitraController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\KomplainController;
+use App\Http\Controllers\KosController;
+
 
 /*
 |--------------------------------------------------------------------------
 | Auth Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', fn() => redirect()->route('login'));
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

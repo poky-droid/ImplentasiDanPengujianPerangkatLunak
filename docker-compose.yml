@@ -1,0 +1,80 @@
+services:
+  # ─── Aplikasi Laravel ───────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: laravel_app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      APP_NAME: Laravel
+      APP_ENV: local
+      APP_KEY: # akan diisi saat pertama kali setup
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+
+      DB_CONNECTION: mariadb
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ippl
+      DB_USERNAME: laravel
+      DB_PASSWORD: secret
+
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./bootstrap/cache:/var/www/html/bootstrap/cache
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - laravel_net
+
+  # ─── Database MariaDB ────────────────────────────────
+  db:
+    image: mariadb:11
+    container_name: laravel_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootsecret
+      MYSQL_DATABASE: ippl
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - laravel_net
+
+  # ─── phpMyAdmin (opsional, untuk kelola DB lewat browser) ─
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: laravel_pma
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: laravel
+      PMA_PASSWORD: secret
+    depends_on:
+      - db
+    networks:
+      - laravel_net
+
+volumes:
+  db_data:
+
+networks:
+  laravel_net:
+    driver: bridge

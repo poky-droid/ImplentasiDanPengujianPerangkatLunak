@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layout.app')
 
 @section('title', 'Pembayaran ke Owner')
 @section('page-title', 'Pembayaran ke Owner')

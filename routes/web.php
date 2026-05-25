@@ -20,6 +20,7 @@ use App\Http\Controllers\KosController;
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
+Route::get('/kos/search', [KosController::class, 'search'])->name('kos.search');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

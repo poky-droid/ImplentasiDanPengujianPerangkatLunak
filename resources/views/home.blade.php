@@ -33,54 +33,83 @@
 
         /* ─── NAVBAR ─────────────────────────────────────── */
         .navbar {
-            background: var(--sage-deeper);
+            background: var(--sage-bg);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 32px;
-            height: 60px;
+            height: 64px;
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(107,143,113,0.15);
         }
         .navbar-left { display: flex; align-items: center; gap: 16px; }
         .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
-        .hamburger span { display: block; width: 20px; height: 2px; background: #fff; border-radius: 2px; }
-        .brand { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: 1px; }
-        .brand span { color: var(--gold-light); }
+        .hamburger span { display: block; width: 20px; height: 2px; background: var(--text-dark); border-radius: 2px; }
 
+        .brand-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .brand-logo {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--sage-light);
+            background: var(--white);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            padding: 2px;
+        }
+        .brand-logo img { width: 38px; height: 38px; object-fit: contain; }
+        .brand-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .search-form { flex: 1; max-width: 420px; margin: 0 32px; }
         .search-bar {
-            flex: 1;
-            max-width: 420px;
-            margin: 0 32px;
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 6px 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            background: var(--white);
+            border: 1.5px solid rgba(107,143,113,0.25);
+            border-radius: 24px;
+            overflow: hidden;
         }
         .search-bar input {
-            background: transparent;
+            flex: 1;
             border: none;
             outline: none;
-            color: #fff;
+            padding: 10px 16px;
             font-family: 'DM Sans', sans-serif;
             font-size: 13px;
-            width: 100%;
+            color: var(--text-dark);
+            background: transparent;
         }
-        .search-bar input::placeholder { color: rgba(255,255,255,0.5); }
-        .search-bar svg { flex-shrink: 0; }
+        .search-bar input::placeholder { color: var(--text-light); }
+        .search-bar .btn-filter {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--sage-deeper);
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+        .search-bar .btn-filter:hover { background: var(--sage-dark); }
 
         .navbar-right { display: flex; align-items: center; gap: 20px; }
-        .navbar-right a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 13px; transition: color .2s; }
-        .navbar-right a:hover { color: #fff; }
-        .nav-icon { color: rgba(255,255,255,0.8); cursor: pointer; transition: color .2s; }
-        .nav-icon:hover { color: #fff; }
+        .nav-icon { color: var(--text-mid); cursor: pointer; transition: color .2s; }
+        .nav-icon:hover { color: var(--sage-deeper); }
         .btn-masuk {
-            background: var(--gold);
-            color: var(--text-dark);
+            background: var(--sage-deeper);
+            color: #fff;
             border: none;
             border-radius: 20px;
             padding: 7px 20px;
@@ -90,7 +119,7 @@
             cursor: pointer;
             transition: background .2s, transform .1s;
         }
-        .btn-masuk:hover { background: var(--gold-light); transform: translateY(-1px); }
+        .btn-masuk:hover { background: var(--sage-dark); transform: translateY(-1px); }
 
         /* ─── HERO ──────────────────────────────────────── */
         .hero {
@@ -253,6 +282,8 @@
             font-weight: 500;
             cursor: pointer;
             transition: background .2s;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn-lihat:hover { background: var(--sage-dark); }
 
@@ -275,16 +306,9 @@
             transform: translateY(-4px);
             box-shadow: 0 12px 32px rgba(74,107,80,0.2);
         }
-        .kos-img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            display: block;
-        }
         .kos-img-placeholder {
             width: 100%;
             height: 150px;
-            background: linear-gradient(135deg, #c8d8c9 0%, #a8bfaa 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -300,13 +324,12 @@
             border-radius: 10px;
             margin-bottom: 8px;
         }
-        .badge-putri { background: #FFE8EF; color: #C0516A; }
-        .badge-putra { background: #E8F0FF; color: #4A6BC0; }
-        .badge-campur { background: #E8F5E9; color: #2E7D32; }
-        .badge-exclusive { background: #FFF8E1; color: #B8860B; }
+        .badge-putri    { background: #FFE8EF; color: #C0516A; }
+        .badge-putra    { background: #E8F0FF; color: #4A6BC0; }
+        .badge-campur   { background: #E8F5E9; color: #2E7D32; }
+        .badge-exclusive{ background: #FFF8E1; color: #B8860B; }
 
         .kos-name {
-            font-family: 'DM Sans', sans-serif;
             font-size: 14px;
             font-weight: 600;
             color: var(--text-dark);
@@ -328,11 +351,7 @@
             border-top: 1px solid #f0f0f0;
             padding-top: 10px;
         }
-        .kos-price {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--sage-dark);
-        }
+        .kos-price { font-size: 13px; font-weight: 700; color: var(--sage-dark); }
         .kos-price span { font-size: 10px; font-weight: 400; color: var(--text-light); }
         .kos-rating {
             display: flex;
@@ -349,8 +368,8 @@
             padding: 52px 64px;
         }
         .testi-title {
-            font-family: 'DM Sans', sans-serif;
             font-size: 22px;
+            font-weight: 600;
             color: var(--text-dark);
             text-align: center;
             margin-bottom: 36px;
@@ -369,25 +388,14 @@
             box-shadow: var(--card-shadow);
         }
         .testi-stars { color: var(--gold); font-size: 13px; margin-bottom: 12px; letter-spacing: 2px; }
-        .testi-text {
-            font-size: 13px;
-            line-height: 1.7;
-            color: var(--text-mid);
-            margin-bottom: 20px;
-        }
+        .testi-text { font-size: 13px; line-height: 1.7; color: var(--text-mid); margin-bottom: 20px; }
         .testi-author { display: flex; align-items: center; gap: 12px; }
         .testi-avatar {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--sage-light), var(--sage-dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 15px;
-            color: #fff;
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 15px; color: #fff; flex-shrink: 0;
         }
         .testi-name { font-weight: 600; font-size: 13px; color: var(--text-dark); }
         .testi-univ { font-size: 11px; color: var(--text-light); }
@@ -403,8 +411,17 @@
             gap: 40px;
             margin-bottom: 40px;
         }
-        .footer-brand { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 12px; }
-        .footer-brand span { color: var(--gold-light); }
+        .footer-brand-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 12px; }
+        .footer-brand-logo {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: var(--white);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; padding: 2px;
+        }
+        .footer-brand-logo img { width: 38px; height: 38px; object-fit: contain; }
+        .footer-brand-name { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: 1.5px; }
         .footer-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.7; }
         .footer-col-title { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
         .footer-links { list-style: none; }
@@ -432,9 +449,7 @@
         .footer-bottom a:hover { color: rgba(255,255,255,0.6); }
 
         /* ─── RESPONSIVE ─────────────────────────────────── */
-        @media (max-width: 1100px) {
-            .kos-grid { grid-template-columns: repeat(3, 1fr); }
-        }
+        @media (max-width: 1100px) { .kos-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 800px) {
             .hero { padding: 48px 24px; }
             .section, .testi-section { padding: 36px 24px; }
@@ -444,7 +459,7 @@
             .footer-grid { grid-template-columns: 1fr 1fr; }
             footer { padding: 36px 24px 20px; }
             .navbar { padding: 0 16px; }
-            .search-bar { display: none; }
+            .search-form { display: none; }
         }
         @media (max-width: 500px) {
             .kos-grid { grid-template-columns: 1fr; }
@@ -460,15 +475,25 @@
         <div class="hamburger">
             <span></span><span></span><span></span>
         </div>
-        <div class="brand">RU<span>MAN</span>TRA</div>
+        <a href="/" class="brand-wrap">
+            <div class="brand-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Rumantra">
+            </div>
+            <span class="brand-name">Rumantra</span>
+        </a>
     </div>
 
-    <div class="search-bar">
-        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.6)" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
-        <input type="text" placeholder="Cari kos di daerahmu...">
-    </div>
+    <form action="{{ route('kos.search') }}" method="GET" class="search-form">
+        <div class="search-bar">
+            <input type="text" name="q" placeholder="Cari kos di daerahmu...">
+            <button type="submit" class="btn-filter">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+                Filter
+            </button>
+        </div>
+    </form>
 
     <div class="navbar-right">
         <svg class="nav-icon" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
@@ -500,8 +525,6 @@
 <div class="explore">
     <p class="explore-title">Explore Rumantra</p>
     <div class="explore-grid">
-
-        <!-- Exclusive -->
         <div class="explore-item">
             <div class="explore-icon">
                 <svg width="36" height="36" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.85)" stroke-width="1.5">
@@ -513,8 +536,6 @@
             </div>
             <span class="explore-label">Exclusive</span>
         </div>
-
-        <!-- Campur -->
         <div class="explore-item">
             <div class="explore-icon">
                 <svg width="36" height="36" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.85)" stroke-width="1.5">
@@ -525,8 +546,6 @@
             </div>
             <span class="explore-label">Campur</span>
         </div>
-
-        <!-- Putri -->
         <div class="explore-item">
             <div class="explore-icon">
                 <svg width="36" height="36" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.85)" stroke-width="1.5">
@@ -537,8 +556,6 @@
             </div>
             <span class="explore-label">Putri</span>
         </div>
-
-        <!-- Putra -->
         <div class="explore-item">
             <div class="explore-icon">
                 <svg width="36" height="36" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.85)" stroke-width="1.5">
@@ -549,7 +566,6 @@
             </div>
             <span class="explore-label">Putra</span>
         </div>
-
     </div>
 </div>
 
@@ -561,175 +577,118 @@
     </div>
 
     <div class="kos-grid">
-
-        <!-- Card 1 -->
         <div class="kos-card">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c9d9ca,#9ab09c)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5">
-                    <path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/>
-                </svg>
+                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
             </div>
             <div class="kos-body">
                 <span class="kos-type-badge badge-putri">Putri</span>
                 <div class="kos-name">Kos Melati Indah</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Veteran No.12, Malang
-                </div>
+                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Veteran No.12, Malang</div>
                 <div class="kos-price-row">
                     <div class="kos-price">Rp 700K <span>/bulan</span></div>
                     <div class="kos-rating">★ 4.8</div>
                 </div>
             </div>
         </div>
-
-        <!-- Card 2 -->
         <div class="kos-card">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d9c9c0,#b09a8a)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5">
-                    <path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/>
-                </svg>
+                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
             </div>
             <div class="kos-body">
                 <span class="kos-type-badge badge-putra">Putra</span>
                 <div class="kos-name">Kos Sejahtera Jaya</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Soekarno Hatta, Malang
-                </div>
+                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Soekarno Hatta, Malang</div>
                 <div class="kos-price-row">
                     <div class="kos-price">Rp 500K <span>/bulan</span></div>
                     <div class="kos-rating">★ 4.5</div>
                 </div>
             </div>
         </div>
-
-        <!-- Card 3 -->
         <div class="kos-card">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c9d9d5,#8ab0a8)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5">
-                    <path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/>
-                </svg>
+                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
             </div>
             <div class="kos-body">
                 <span class="kos-type-badge badge-campur">Campur</span>
                 <div class="kos-name">Green House Kos</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Gajayana No.5, Malang
-                </div>
+                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Gajayana No.5, Malang</div>
                 <div class="kos-price-row">
                     <div class="kos-price">Rp 850K <span>/bulan</span></div>
                     <div class="kos-rating">★ 4.9</div>
                 </div>
             </div>
         </div>
-
-        <!-- Card 4 -->
         <div class="kos-card">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d9d0c0,#b0a070)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5">
-                    <path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/>
-                </svg>
+                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
             </div>
             <div class="kos-body">
                 <span class="kos-type-badge badge-exclusive">Exclusive</span>
                 <div class="kos-name">Villa Kos Exclusive</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Diponegoro No.8, Malang
-                </div>
+                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Diponegoro No.8, Malang</div>
                 <div class="kos-price-row">
                     <div class="kos-price">Rp 1.5Jt <span>/bulan</span></div>
                     <div class="kos-rating">★ 5.0</div>
                 </div>
             </div>
         </div>
-
-        <!-- Card 5 -->
         <div class="kos-card">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c0c9d9,#708ab0)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5">
-                    <path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/>
-                </svg>
+                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
             </div>
             <div class="kos-body">
                 <span class="kos-type-badge badge-putra">Putra</span>
                 <div class="kos-name">Kos Bintang Timur</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Ahmad Yani No.3, Malang
-                </div>
+                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Ahmad Yani No.3, Malang</div>
                 <div class="kos-price-row">
                     <div class="kos-price">Rp 600K <span>/bulan</span></div>
                     <div class="kos-rating">★ 4.6</div>
                 </div>
             </div>
         </div>
-
-        <!-- Card 6 -->
         <div class="kos-card">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d0c9d9,#9088b0)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5">
-                    <path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/>
-                </svg>
+                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
             </div>
             <div class="kos-body">
                 <span class="kos-type-badge badge-putri">Putri</span>
                 <div class="kos-name">Kos Mawar Merah</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Kawi Raya No.17, Malang
-                </div>
+                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Kawi Raya No.17, Malang</div>
                 <div class="kos-price-row">
                     <div class="kos-price">Rp 750K <span>/bulan</span></div>
                     <div class="kos-rating">★ 4.7</div>
                 </div>
             </div>
         </div>
-
-        <!-- Card 7 -->
         <div class="kos-card">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c9d5d0,#8ab08a)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5">
-                    <path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/>
-                </svg>
+                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
             </div>
             <div class="kos-body">
                 <span class="kos-type-badge badge-campur">Campur</span>
                 <div class="kos-name">Kos Harmoni Asri</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Sukarno No.22, Malang
-                </div>
+                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Sukarno No.22, Malang</div>
                 <div class="kos-price-row">
                     <div class="kos-price">Rp 650K <span>/bulan</span></div>
                     <div class="kos-rating">★ 4.4</div>
                 </div>
             </div>
         </div>
-
-        <!-- Card 8 -->
         <div class="kos-card">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d9c9d0,#b08088)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5">
-                    <path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/>
-                </svg>
+                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
             </div>
             <div class="kos-body">
                 <span class="kos-type-badge badge-exclusive">Exclusive</span>
                 <div class="kos-name">Premium Stay Kos</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Ijen Blvd No.1, Malang
-                </div>
+                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Ijen Blvd No.1, Malang</div>
                 <div class="kos-price-row">
                     <div class="kos-price">Rp 2Jt <span>/bulan</span></div>
                     <div class="kos-rating">★ 4.9</div>
                 </div>
             </div>
         </div>
-
     </div>
 </section>
 
@@ -737,7 +696,6 @@
 <section class="testi-section">
     <h2 class="testi-title">Cerita dari Teman-teman Mahasiswa</h2>
     <div class="testi-grid">
-
         <div class="testi-card">
             <div class="testi-stars">★★★★★</div>
             <p class="testi-text">Rumantra sangat membantu saya menemukan kos yang nyaman dan dekat kampus. Prosesnya mudah, cepat, dan pemilik kos sangat ramah. Highly recommended buat mahasiswa baru!</p>
@@ -749,7 +707,6 @@
                 </div>
             </div>
         </div>
-
         <div class="testi-card">
             <div class="testi-stars">★★★★★</div>
             <p class="testi-text">Awalnya bingung cari kos dari luar kota, tapi Rumantra bantu banget! Foto-foto kos detail dan akurat, jadi pas datang langsung cocok. Terima kasih Rumantra!</p>
@@ -761,7 +718,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </section>
 
@@ -769,7 +725,12 @@
 <footer>
     <div class="footer-grid">
         <div>
-            <div class="footer-brand">RU<span>MAN</span>TRA</div>
+            <a href="/" class="footer-brand-wrap">
+                <div class="footer-brand-logo">
+                    <img src="{{ asset('images/logo.png') }}" alt="Rumantra">
+                </div>
+                <span class="footer-brand-name">RUMANTRA</span>
+            </a>
             <p class="footer-desc">Platform terpercaya untuk menemukan kos impian mahasiswa di seluruh Indonesia. Aman, nyaman, dan terjangkau.</p>
         </div>
         <div>
@@ -805,7 +766,6 @@
             </div>
         </div>
     </div>
-
     <div class="footer-bottom">
         &copy; 2025 Rumantra &nbsp;·&nbsp;
         <a href="#">Syarat & Ketentuan</a> &nbsp;·&nbsp;

@@ -10,4 +10,12 @@ class KosController extends Controller
     {
         return view('kos-listing');
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('q');
+        // nanti bisa difilter dari DB:
+        // $kos = Kos::where('nama', 'like', "%$query%")->paginate(8);
+        return view('kos-search', compact('query'));
+    }
 }

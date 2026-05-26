@@ -118,6 +118,8 @@
             font-weight: 600;
             cursor: pointer;
             transition: background .2s, transform .1s;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn-masuk:hover { background: var(--sage-dark); transform: translateY(-1px); }
 
@@ -468,11 +470,12 @@
     </style>
 </head>
 <body>
+    @include('partials.sidebar')
 
 <!-- ══════════════════ NAVBAR ══════════════════ -->
 <nav class="navbar">
     <div class="navbar-left">
-        <div class="hamburger">
+        <div class="hamburger" onclick="openSidebar()">
             <span></span><span></span><span></span>
         </div>
         <a href="/" class="brand-wrap">
@@ -503,7 +506,9 @@
         <svg class="nav-icon" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
-        <button class="btn-masuk">Masuk</button>
+        @guest
+            <a href="{{ route('login') }}" class="btn-masuk">Masuk</a>
+        @endguest
     </div>
 </nav>
 
@@ -773,6 +778,23 @@
         <a href="#">Syarat & Kebijakan</a>
     </div>
 </footer>
+    @if(session('registered'))
+        <div id="popup-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index:9999;">
+        <div style="background:#fff; border-radius:20px; padding:48px 40px; text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.15); min-width:300px;">
+            <div style="width:72px; height:72px; background:#4CAF50; border-radius:50%; display:flex;align-items:center; justify-content:center; margin:0 auto 20px;">
+                <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"/>
+        </svg>
+    </div>
+        <p style="font-family:'DM Sans',sans-serif; font-size:16px; font-weight:600; color:#1E2D22;">Berhasil Melakukan Registrasi</p>
+    </div>
+    </div>
 
+    <script>
+        setTimeout(function() {
+            document.getElementById('popup-overlay').style.display = 'none';
+        }, 2500);
+    </script>
+@endif
 </body>
 </html>

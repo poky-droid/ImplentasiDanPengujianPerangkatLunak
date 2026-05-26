@@ -314,11 +314,12 @@
     </style>
 </head>
 <body>
+    @include('partials.sidebar')
 
 <!-- ══════════════════ NAVBAR ══════════════════ -->
 <nav class="navbar">
     <div class="navbar-left">
-        <div class="hamburger">
+        <div class="hamburger" onclick="openSidebar()">
             <span></span><span></span><span></span>
         </div>
         <a href="/" class="brand-wrap">

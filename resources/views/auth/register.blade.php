@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - Rumantra</title>
+    <title>Daftar - Rumantra</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,10 +12,8 @@
             --sage-deeper: #3A5540;
             --sage-dark:   #4A6B50;
             --sage-light:  #A8C5AC;
-            --sage-bg:     #EDF3EE;
             --white:       #FFFFFF;
             --text-dark:   #1E2D22;
-            --text-mid:    #4A5C4D;
             --text-light:  #9AA89D;
             --border:      #D8E4DA;
             --radius:      50px;
@@ -38,30 +36,27 @@
             display: flex;
             width: 100%;
             max-width: 780px;
-            min-height: 460px;
+            min-height: 520px;
             overflow: hidden;
         }
 
         /* ─── LEFT FORM ─── */
         .form-side {
             flex: 1;
-            padding: 52px 48px;
+            padding: 44px 48px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        .greeting {
-            font-size: 28px;
+        .page-title {
+            font-size: 26px;
             font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 32px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-bottom: 28px;
         }
 
-        .form-group { margin-bottom: 14px; }
+        .form-group { margin-bottom: 12px; }
 
         .form-input {
             width: 100%;
@@ -77,19 +72,14 @@
         }
         .form-input::placeholder { color: var(--text-light); }
         .form-input:focus { border-color: var(--sage-dark); }
+        .form-input.is-invalid { border-color: #e57373; }
 
-        .forgot-wrap {
-            text-align: right;
-            margin-bottom: 20px;
+        .invalid-msg {
+            font-size: 11px;
+            color: #e57373;
             margin-top: 4px;
+            padding-left: 8px;
         }
-        .forgot-wrap a {
-            font-size: 12px;
-            color: var(--text-light);
-            text-decoration: none;
-            transition: color .2s;
-        }
-        .forgot-wrap a:hover { color: var(--sage-dark); }
 
         .btn-submit {
             width: 100%;
@@ -103,19 +93,19 @@
             font-weight: 600;
             cursor: pointer;
             transition: background .2s, transform .15s;
-            margin-bottom: 16px;
+            margin-top: 4px;
+            margin-bottom: 14px;
         }
         .btn-submit:hover { background: var(--sage-dark); transform: translateY(-1px); }
 
-        .register-link {
+        .login-link {
             font-size: 13px;
             color: var(--text-light);
             text-decoration: none;
             transition: color .2s;
         }
-        .register-link:hover { color: var(--sage-dark); }
+        .login-link:hover { color: var(--sage-dark); }
 
-        /* Error */
         .alert-error {
             background: #fff0f0;
             border: 1px solid #f5c0c0;
@@ -123,40 +113,24 @@
             padding: 10px 16px;
             font-size: 13px;
             color: #c0516a;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         /* ─── RIGHT ILLUSTRATION ─── */
         .illustration-side {
             width: 360px;
             flex-shrink: 0;
-            background: linear-gradient(160deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
             border-radius: 20px;
             margin: 16px 16px 16px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
-            position: relative;
         }
-
-        .illustration-side svg {
+        .illustration-side img {
             width: 100%;
             height: 100%;
-            position: absolute;
-            inset: 0;
+            object-fit: cover;
+            display: block;
         }
 
-        /* House illustration drawn with SVG */
-        .house-wrap {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ─── RESPONSIVE ─── */
         @media (max-width: 640px) {
             .illustration-side { display: none; }
             .form-side { padding: 40px 28px; }
@@ -169,75 +143,64 @@
 
     <!-- FORM SIDE -->
     <div class="form-side">
-        <div class="greeting">Selamat datang 👋</div>
+        <div class="page-title">Daftar</div>
 
-        {{-- Error message --}}
         @if($errors->any())
-        <div class="alert-error">
-            {{ $errors->first() }}
-        </div>
+        <div class="alert-error">{{ $errors->first() }}</div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('register') }}">
             @csrf
 
             <div class="form-group">
-                <input
-                    type="email"
-                    name="email"
-                    class="form-input"
-                    placeholder="Email"
-                    value="{{ old('email') }}"
-                    required
-                >
+                <input type="text" name="name"
+                    class="form-input {{ $errors->has('name') ? 'is-invalid' : '' }}"
+                    placeholder="Nama lengkap"
+                    value="{{ old('name') }}" required>
+                @error('name') <div class="invalid-msg">{{ $message }}</div> @enderror
             </div>
 
             <div class="form-group">
-                <input
-                    type="password"
-                    name="password"
+                <input type="email" name="email"
+                    class="form-input {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                    placeholder="Email"
+                    value="{{ old('email') }}" required>
+                @error('email') <div class="invalid-msg">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="form-group">
+                <input type="tel" name="phone"
+                    class="form-input {{ $errors->has('phone') ? 'is-invalid' : '' }}"
+                    placeholder="No telepon"
+                    value="{{ old('phone') }}">
+                @error('phone') <div class="invalid-msg">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password"
+                    class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                    placeholder="Password" required>
+                @error('password') <div class="invalid-msg">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password_confirmation"
                     class="form-input"
-                    placeholder="Password"
-                    required
-                >
+                    placeholder="Konfirmasi password" required>
             </div>
 
-            <div class="forgot-wrap">
-                <a href="{{ route('password.request') }}">Lupa password?</a>
-            </div>
-
-            <button type="submit" class="btn-submit">Masuk</button>
+            <button type="submit" class="btn-submit">Daftar</button>
         </form>
 
-        <a href="{{ route('register') }}" class="register-link">Belum punya akun?</a>
+        <a href="{{ route('login') }}" class="login-link">Sudah punya akun</a>
     </div>
 
-     <!-- ILLUSTRATION SIDE -->
+    <!-- ILLUSTRATION SIDE -->
     <div class="illustration-side">
-        <img src="{{ asset('images/illustration.png') }}" alt="Rumantra" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <img src="{{ asset('images/illustration.png') }}" alt="Rumantra">
     </div>
 
 </div>
 
-
-</div>
-    @if(session('registered'))
-        <div id="popup-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index:9999;">
-            <div style="background:#fff; border-radius:20px; padding:48px 40px; text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.15); min-width:300px;">
-                <div style="width:72px; height:72px; background:#4CAF50; border-radius:50%; display:flex;align-items:center; justify-content:center; margin:0 auto 20px;">
-                 <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="3">
-                <polyline points="20 6 9 17 4 12"/>
-            </svg>
-        </div>
-            <p style="font-family:'DM Sans',sans-serif; font-size:16px; font-weight:600; color:#1E2D22;">Berhasil Melakukan Registrasi</p>
-        </div>
-        </div>
-
-        <script>
-            setTimeout(function() {
-                document.getElementById('popup-overlay').style.display = 'none';
-            }, 2500);
-        </script>
-    @endif
 </body>
 </html>

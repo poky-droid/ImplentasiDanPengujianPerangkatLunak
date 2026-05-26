@@ -39,4 +39,11 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'password',
+    ];
+    
 }

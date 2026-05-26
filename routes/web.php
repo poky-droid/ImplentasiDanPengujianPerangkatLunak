@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\KomplainController;
 use App\Http\Controllers\KosController;
-
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +25,8 @@ Route::get('/kos/search', [KosController::class, 'search'])->name('kos.search');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-Route::get('/register', fn() => view('auth.register'))->name('register');
+Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 Route::get('/password/reset', fn() => view('auth.passwords.email'))->name('password.request');
 
 /*

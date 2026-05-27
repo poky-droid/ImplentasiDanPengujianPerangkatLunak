@@ -21,6 +21,7 @@ use App\Http\Controllers\Auth\RegisterController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
 Route::get('/kos/search', [KosController::class, 'search'])->name('kos.search');
+Route::get('/kos/{id}', [KosController::class, 'show'])->name('kos.show');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
@@ -60,3 +61,4 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/komplain', [KomplainController::class, 'index'])->name('komplain.index');
     Route::put('/komplain/{id}/selesai', [KomplainController::class, 'selesai'])->name('komplain.selesai');
 });
+

@@ -331,32 +331,29 @@
     </div>
 
     <form action="{{ route('kos.search') }}" method="GET" style="display:contents">
-    <div class="search-wrap">
-        <input type="text" name="q" placeholder="cari berdasarkan lokasi, lingkungan">
-        <button type="submit" class="btn-filter">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-            </svg>
-            Filter
-        </button>
-    </div>
-</form>
+        <div class="search-wrap">
+            <input type="text" name="q" placeholder="cari berdasarkan lokasi, lingkungan">
+            <button type="submit" class="btn-filter">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+                Filter
+            </button>
+        </div>
+    </form>
 
     <div class="navbar-right">
-        <!-- Notifikasi -->
         <div class="nav-icon">
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
         </div>
-        <!-- Chat -->
         <div class="nav-icon">
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
         </div>
-        <!-- Favorit -->
         <div class="nav-icon">
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -399,7 +396,7 @@
                 <div class="kos-name">Kos Putri Melati</div>
                 <div class="kos-loc">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan, Purwokerto Selatan
+                    Jl. Jatiwaras, Purwokerto Selatan
                 </div>
                 <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
                 <div class="kos-tags">
@@ -407,7 +404,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="#" class="btn-detail">Lihat Detail</a>
+                <a href="{{ route('kos.show', 1) }}" class="btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -423,7 +420,7 @@
                 <div class="kos-name">Kos Putri Melati</div>
                 <div class="kos-loc">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan, Purwokerto Selatan
+                    Jl. Jatiwaras, Purwokerto Selatan
                 </div>
                 <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
                 <div class="kos-tags">
@@ -431,7 +428,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="#" class="btn-detail">Lihat Detail</a>
+                <a href="{{ route('kos.show', 2) }}" class="btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -447,7 +444,7 @@
                 <div class="kos-name">Kos Putri Melati</div>
                 <div class="kos-loc">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan, Purwokerto Selatan
+                    Jl. Jatiwaras, Purwokerto Selatan
                 </div>
                 <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
                 <div class="kos-tags">
@@ -455,7 +452,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="#" class="btn-detail">Lihat Detail</a>
+                <a href="{{ route('kos.show', 3) }}" class="btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -471,7 +468,7 @@
                 <div class="kos-name">Kos Putri Melati</div>
                 <div class="kos-loc">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan, Purwokerto Selatan
+                    Jl. Jatiwaras, Purwokerto Selatan
                 </div>
                 <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
                 <div class="kos-tags">
@@ -479,7 +476,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="#" class="btn-detail">Lihat Detail</a>
+                <a href="{{ route('kos.show', 4) }}" class="btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -495,7 +492,7 @@
                 <div class="kos-name">Kos Putri Melati</div>
                 <div class="kos-loc">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan, Purwokerto Selatan
+                    Jl. Jatiwaras, Purwokerto Selatan
                 </div>
                 <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
                 <div class="kos-tags">
@@ -503,7 +500,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="#" class="btn-detail">Lihat Detail</a>
+                <a href="{{ route('kos.show', 5) }}" class="btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -519,7 +516,7 @@
                 <div class="kos-name">Kos Putri Melati</div>
                 <div class="kos-loc">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan, Purwokerto Selatan
+                    Jl. Jatiwaras, Purwokerto Selatan
                 </div>
                 <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
                 <div class="kos-tags">
@@ -527,7 +524,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="#" class="btn-detail">Lihat Detail</a>
+                <a href="{{ route('kos.show', 6) }}" class="btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -543,7 +540,7 @@
                 <div class="kos-name">Kos Putri Melati</div>
                 <div class="kos-loc">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan, Purwokerto Selatan
+                    Jl. Jatiwaras, Purwokerto Selatan
                 </div>
                 <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
                 <div class="kos-tags">
@@ -551,7 +548,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="#" class="btn-detail">Lihat Detail</a>
+                <a href="{{ route('kos.show', 7) }}" class="btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -567,7 +564,7 @@
                 <div class="kos-name">Kos Putri Melati</div>
                 <div class="kos-loc">
                     <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan, Purwokerto Selatan
+                    Jl. Jatiwaras, Purwokerto Selatan
                 </div>
                 <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
                 <div class="kos-tags">
@@ -575,7 +572,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="#" class="btn-detail">Lihat Detail</a>
+                <a href="{{ route('kos.show', 8) }}" class="btn-detail">Lihat Detail</a>
             </div>
         </div>
 

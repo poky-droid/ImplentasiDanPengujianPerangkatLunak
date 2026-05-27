@@ -11,6 +11,11 @@ class KosController extends Controller
         return view('kos-listing');
     }
 
+    public function show($id)
+    {
+        $kos = Kos::findOrFail($id);
+        return view('kos.kos-detail', compact('kos'));
+    }
     public function search(Request $request)
     {
         $query = $request->get('q');

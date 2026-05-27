@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Kos;
 
 class KosController extends Controller
 {
@@ -16,6 +17,7 @@ class KosController extends Controller
         $kos = Kos::findOrFail($id);
         return view('kos.kos-detail', compact('kos'));
     }
+
     public function search(Request $request)
     {
         $query = $request->get('q');

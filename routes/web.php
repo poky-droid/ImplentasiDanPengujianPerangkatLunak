@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\KomplainController;
 use App\Http\Controllers\KosController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
 Route::get('/kos/search', [KosController::class, 'search'])->name('kos.search');
 Route::get('/kos/{id}', [KosController::class, 'show'])->name('kos.show');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

@@ -64,5 +64,12 @@ class PembayaranController extends Controller
 
         return view('admin.pembayaran', compact('pembayarans', 'totalDibayarkan', 'menungguTransfer'));
     }
+
+    public function create($id = null)
+
+    {
+        return view('pembayaran');
+    }
+
 }
 

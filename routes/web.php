@@ -7,12 +7,13 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\OwnerController;
 use App\Http\Controllers\Admin\PengajuanMitraController;
-use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\List_BookingController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\KomplainController;
 use App\Http\Controllers\KosController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,10 @@ Route::get('/kos/{id}', [KosController::class, 'show'])->name('kos.show');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/booking/{kos}', [BookingController::class, 'create'])->name('booking.create');
+    Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+    Route::get('/pembayaran/{booking}', [PembayaranController::class, 'create'])->name('pembayaran.create');
+    Route::post('/pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -57,7 +62,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/pengajuan/{id}/tolak', [PengajuanMitraController::class, 'tolak'])->name('pengajuan.tolak');
 
     // Booking
-    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings', [List_BookingController::class, 'index'])->name('bookings.index');
 
     // Pembayaran
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Owner;
-use App\Models\Booking;
+use App\Models\List_Booking;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -14,9 +14,9 @@ class DashboardController extends Controller
     {
         $totalUsers = User::count();
         $totalOwners = Owner::count();
-        $bookingAktif = Booking::count();
+        $bookingAktif = List_Booking::count();
         $pendapatan = 5200000; // Mock data
-        $bookingTerbaru = Booking::latest()->take(5)->get();
+        $bookingTerbaru = List_Booking::latest()->take(5)->get();
         
         // Get recent owner applications with their first property
         $pengajuanTerbaru = Owner::with('propertis')

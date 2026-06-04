@@ -23,6 +23,7 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
             return $this->authenticated($request, Auth::user());
         }
 
@@ -31,13 +32,14 @@ class LoginController extends Controller
         ]);
     }
 
-    // ← TARUH DI SINI
     protected function authenticated(Request $request, $user)
     {
+        // Redirect admin users to admin dashboard
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
 
+        // Redirect regular users to home page
         return redirect('/');
     }
 

@@ -20,8 +20,8 @@ class AdminMiddleware
             return redirect()->route('login');
         }
 
-        // Check if user is admin (email ends with @example.com or has admin role)
-        if ($request->user()->email === 'admin@example.com') {
+        // Check if user has admin role
+        if ($request->user()->role === 'admin') {
             return $next($request);
         }
 

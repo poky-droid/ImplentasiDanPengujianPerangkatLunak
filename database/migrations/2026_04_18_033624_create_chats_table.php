@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('owner_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('sender_id');    // user yang kirim pesan
+            $table->unsignedBigInteger('receiver_id');  // user yang terima pesan (owner kos)
+            $table->unsignedBigInteger('kos_id');       // kos yang dibicarakan
             $table->text('pesan');
-            $table->timestamp('waktu');
+            $table->boolean('dibaca')->default(false);
             $table->timestamps();
+ 
+            $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('kos_id')->references('id')->on('kos')->onDelete('cascade');
         });
     }
 

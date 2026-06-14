@@ -14,6 +14,7 @@ use App\Http\Controllers\KosController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
     Route::get('/pembayaran/{booking}', [PembayaranController::class, 'create'])->name('pembayaran.create');
     Route::post('/pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
+    Route::get('/chat/{kos_id}', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

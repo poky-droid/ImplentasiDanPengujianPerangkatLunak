@@ -6,13 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chat extends Model
 {
-    public function user()
+    protected $table = 'chats';
+
+    protected $fillable = [
+        'sender_id',
+        'receiver_id',
+        'kos_id',
+        'pesan',
+        'dibaca',
+    ];
+
+    protected $casts = [
+        'dibaca' => 'boolean',
+    ];
+
+    // ── Relasi ──────────────────────────────────────────
+    public function sender()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function owner()
+    public function receiver()
     {
-        return $this->belongsTo(Owner::class);
+        return $this->belongsTo(User::class, 'receiver_id');
+    }
+
+    public function kos()
+    {
+        return $this->belongsTo(Kos::class, 'kos_id');
     }
 }

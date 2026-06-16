@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Kos;
+use App\Models\User;
 
 class KosSeeder extends Seeder
 {
@@ -54,7 +55,12 @@ class KosSeeder extends Seeder
             ],
         ];
 
+        // Ambil semua user id untuk digunakan sebagai owner_id
+        $userIds = User::pluck('id')->toArray();
+
         foreach ($data as $item) {
+            $ownerId = count($userIds) ? $userIds[array_rand($userIds)] : null;
+            $item['owner_id'] = $ownerId;
             Kos::create($item);
         }
     }

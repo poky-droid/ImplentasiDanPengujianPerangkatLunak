@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FavoritController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +34,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/pembayaran/{booking}', [PembayaranController::class, 'create'])->name('pembayaran.create');
     Route::post('/pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
     Route::get('/chat/{kos_id}', [ChatController::class, 'index'])->name('chat.index');
-    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+    Route::post('/chat/kirim', [ChatController::class, 'send'])->name('chat.kirim');
+
+    // Favorit
+    Route::post('/favorit/{kos_id}/toggle', [FavoritController::class, 'toggle'])->name('favorit.toggle');
+    Route::get('/favorit', [FavoritController::class, 'index'])->name('favorit.index');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

@@ -31,6 +31,119 @@
             background: var(--cream);
             color: var(--text-dark);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main.main {
+            flex: 1;
+        }
+
+        /* ─── FOOTER ─────────────────────────────────────── */
+        footer {
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 64px 32px 32px;
+            font-family: 'DM Sans', sans-serif;
+            margin-top: auto;
+        }
+        .footer-grid {
+            max-width: 1100px;
+            margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        .footer-logo-wrap {
+            display: flex;
+            align-items: center;
+        }
+        .footer-logo-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .footer-logo-circle img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        .footer-col-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            letter-spacing: -0.2px;
+        }
+        .footer-links {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        .footer-links a {
+            font-size: 13px;
+            color: #4b5563;
+            text-decoration: none;
+            transition: color .2s;
+            font-weight: 400;
+        }
+        .footer-links a:hover {
+            color: var(--sage-deeper, #6B8F71);
+        }
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+        .social-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #4b5563;
+            transition: border-color .2s, color .2s, background-color .2s;
+            background: #ffffff;
+        }
+        .social-btn:hover {
+            border-color: var(--sage-deeper, #6B8F71);
+            color: var(--sage-deeper, #6B8F71);
+            background-color: var(--sage-bg, #EDF3EE);
+        }
+        .social-btn svg {
+            fill: currentColor;
+            width: 14px;
+            height: 14px;
+        }
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            padding-top: 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+        .footer-bottom a {
+            color: inherit;
+            text-decoration: none;
+            margin: 0 4px;
+        }
+        .footer-bottom a:hover {
+            color: #4b5563;
         }
 
         /* ─── NAVBAR ─────────────────────────────────────── */
@@ -368,11 +481,11 @@
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
         </div>
-        <div class="nav-icon">
+        <a href="{{ route('favorit.index') }}" class="nav-icon" title="Favorit Saya" style="text-decoration:none;">
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-        </div>
+        </a>
     </div>
 </nav>
 
@@ -616,6 +729,57 @@
     </div>
 
 </main>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-logo-wrap">
+            <div class="footer-logo-circle">
+                <img src="{{ asset('images/logo.png') }}" alt="Rumantra">
+            </div>
+        </div>
+        <div>
+            <div class="footer-col-title">Resource</div>
+            <ul class="footer-links">
+                <li><a href="#">Help center</a></li>
+                <li><a href="#">Security</a></li>
+                <li><a href="#">Privacy policy</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="footer-col-title">Company</div>
+            <ul class="footer-links">
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Contact us</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="footer-col-title">Social</div>
+            <div class="footer-social">
+                <div class="social-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </div>
+                <div class="social-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                    </svg>
+                </div>
+                <div class="social-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 Rumantra &nbsp;•&nbsp; Teman Mahasiswa Cari Kos &nbsp;•&nbsp; <a href="#">Kebijakan Privasi</a> &nbsp;•&nbsp; <a href="#">Syarat & Ketentuan</a>
+    </div>
+</footer>
 
 <script>
     function setTab(el) {

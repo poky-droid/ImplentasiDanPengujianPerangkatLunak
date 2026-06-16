@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use App\Models\Favorit;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,6 +38,19 @@ class User extends Authenticatable
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function favorit()
+    {
+        return $this->hasMany(Favorit::class);
+    }
+
+    /**
+     * Cek apakah user sudah memfavoritkan kos tertentu.
+     */
+    public function isFavorit(int $kos_id): bool
+    {
+        return $this->favorit()->where('kos_id', $kos_id)->exists();
     }
 
     protected $fillable = [

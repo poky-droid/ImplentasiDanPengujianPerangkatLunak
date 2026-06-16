@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Favorit;
 
 class Kos extends Model
 {
@@ -40,6 +41,12 @@ class Kos extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    // ── Relasi ke Favorit ────────────────────────────────
+    public function favorit()
+    {
+        return $this->hasMany(Favorit::class);
     }
 
     // ── Accessor: foto pertama sebagai thumbnail ─────────

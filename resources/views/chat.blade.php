@@ -9,9 +9,8 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --sage:        #6B8F71;
-            --sage-dark:   #4A6B50;
             --sage-deeper: #3A5540;
+            --sage-dark:   #4A6B50;
             --sage-light:  #A8C5AC;
             --sage-bg:     #EDF3EE;
             --cream:       #F0F4F1;
@@ -19,22 +18,20 @@
             --text-dark:   #1E2D22;
             --text-mid:    #4A5C4D;
             --text-light:  #8A9E8D;
-            --pink-bg:     #f5e8e8;
-            --pink-stripe: #ecd6d6;
-            --bubble-out:  #d4c8c8;   /* bubble pesan keluar (user) */
-            --bubble-in:   #ffffff;   /* bubble pesan masuk (pemilik) */
-            --header-bg:   #3d4a44;   /* header chat gelap */
-            --sidebar-active: #3A5540;
+            --border:      #D8E4DA;
         }
 
         body {
             font-family: 'DM Sans', sans-serif;
             background: var(--cream);
             color: var(--text-dark);
-            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        /* ─── NAVBAR ─────────────────────────────────────── */
+        /* ─── NAVBAR ─── */
         .navbar {
             background: var(--sage-bg);
             display: flex;
@@ -43,11 +40,10 @@
             padding: 0 32px;
             height: 64px;
             border-bottom: 1px solid rgba(107,143,113,0.15);
-            position: sticky;
-            top: 0;
+            flex-shrink: 0;
             z-index: 100;
         }
-        .navbar-left { display: flex; align-items: center; gap: 20px; }
+        .navbar-left { display: flex; align-items: center; gap: 16px; }
         .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
         .hamburger span { display: block; width: 20px; height: 2px; background: var(--text-dark); border-radius: 2px; }
         .brand-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
@@ -57,88 +53,75 @@
             display: flex; align-items: center; justify-content: center;
             overflow: hidden; padding: 2px;
         }
-        .brand-name {
-            font-size: 17px; font-weight: 700; color: var(--text-dark);
-            letter-spacing: 1.5px; text-transform: uppercase;
+        .brand-logo img { width: 38px; height: 38px; object-fit: contain; }
+        .brand-name { font-size: 17px; font-weight: 700; color: var(--text-dark); letter-spacing: 1.5px; text-transform: uppercase; }
+
+        .search-form { flex: 1; max-width: 420px; margin: 0 32px; }
+        .search-bar {
+            display: flex; align-items: center;
+            background: var(--white);
+            border: 1.5px solid rgba(107,143,113,0.25);
+            border-radius: 24px; overflow: hidden;
         }
-        .search-wrap {
-            flex: 1; max-width: 480px; margin: 0 32px;
-            display: flex; align-items: center; background: var(--white);
-            border: 1.5px solid rgba(107,143,113,0.25); border-radius: 24px; overflow: hidden;
-        }
-        .search-wrap input {
-            flex: 1; border: none; outline: none; padding: 10px 18px;
+        .search-bar input {
+            flex: 1; border: none; outline: none;
+            padding: 10px 16px;
             font-family: 'DM Sans', sans-serif; font-size: 13px;
             color: var(--text-dark); background: transparent;
         }
-        .search-wrap input::placeholder { color: var(--text-light); }
-        .btn-filter {
+        .search-bar input::placeholder { color: var(--text-light); }
+        .search-bar .btn-filter {
             display: flex; align-items: center; gap: 6px;
-            background: var(--sage-deeper); color: #fff; border: none;
-            padding: 10px 18px; font-family: 'DM Sans', sans-serif;
-            font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+            background: var(--sage-deeper); color: #fff;
+            border: none; padding: 10px 16px;
+            font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+            cursor: pointer; white-space: nowrap;
         }
-        .btn-filter:hover { background: var(--sage-dark); }
         .navbar-right { display: flex; align-items: center; gap: 20px; }
-        .nav-icon { color: var(--text-mid); cursor: pointer; display: flex; align-items: center; transition: color .2s; }
+        .nav-icon { color: var(--text-mid); cursor: pointer; transition: color .2s; display: flex; align-items: center; }
         .nav-icon:hover { color: var(--sage-deeper); }
+        .nav-icon.active { color: var(--sage-deeper); }
 
-        /* ─── CHAT LAYOUT ─────────────────────────────────── */
+        /* ─── CHAT LAYOUT ─── */
         .chat-wrapper {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: calc(100vh - 64px);
+            display: flex;
+            flex: 1;
             overflow: hidden;
         }
 
-        /* ─── SIDEBAR ─────────────────────────────────────── */
+        /* ─── SIDEBAR ─── */
         .chat-sidebar {
-            background: var(--pink-bg);
-            border-right: 1px solid rgba(0,0,0,0.06);
+            width: 280px;
+            flex-shrink: 0;
+            background: var(--cream);
+            padding: 20px 16px;
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-
-            /* Stripe dekoratif vertikal */
-            background-image: repeating-linear-gradient(
-                90deg,
-                transparent,
-                transparent 28px,
-                rgba(180,150,150,0.12) 28px,
-                rgba(180,150,150,0.12) 32px
-            );
-            background-color: #f5e8e8;
-        }
-
-        .sidebar-header {
-            padding: 20px 20px 12px;
+            gap: 12px;
+            overflow-y: auto;
         }
 
         .btn-pesan {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 8px;
-            background: var(--sidebar-active);
+            background: var(--sage-deeper);
             color: #fff;
             border: none;
             border-radius: 10px;
-            padding: 10px 18px;
+            padding: 10px 16px;
             font-family: 'DM Sans', sans-serif;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            width: fit-content;
+            margin-bottom: 4px;
         }
 
-        .conversation-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+        .chat-list { display: flex; flex-direction: column; gap: 4px; }
 
-        .conv-item {
+        .chat-item {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -146,218 +129,239 @@
             border-radius: 12px;
             cursor: pointer;
             transition: background .2s;
-            text-decoration: none;
-            color: var(--text-dark);
         }
-        .conv-item:hover { background: rgba(255,255,255,0.5); }
-        .conv-item.active {
-            background: var(--sidebar-active);
-            color: #fff;
-        }
+        .chat-item:hover { background: rgba(107,143,113,0.1); }
+        .chat-item.active { background: var(--sage-deeper); }
 
-        .conv-avatar {
-            width: 38px; height: 38px;
-            border-radius: 50%;
-            background: #c9b8b8;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        .conv-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .conv-avatar svg { opacity: 0.6; }
-
-        .conv-name {
-            font-size: 13px;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .conv-item.active .conv-name { color: #fff; }
-
-        /* ─── CHAT MAIN ────────────────────────────────────── */
-        .chat-main {
-            display: flex;
-            flex-direction: column;
-            background-image: repeating-linear-gradient(
-                90deg,
-                transparent,
-                transparent 28px,
-                rgba(180,150,150,0.10) 28px,
-                rgba(180,150,150,0.10) 32px
-            );
-            background-color: #f5e8e8;
-            overflow: hidden;
-        }
-
-        /* Header chat */
-        .chat-header {
-            background: var(--header-bg);
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 16px 24px;
-            border-radius: 0 0 0 0;
-            flex-shrink: 0;
-        }
-
-        .chat-header-avatar {
+        .chat-avatar {
             width: 42px; height: 42px;
             border-radius: 50%;
-            background: #8a9e8d;
+            border: 2px solid var(--sage-light);
+            overflow: hidden; flex-shrink: 0;
+            background: var(--sage-bg);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .chat-avatar-initials { font-size: 14px; font-weight: 700; color: var(--sage-deeper); }
+
+        .chat-item-info { flex: 1; min-width: 0; }
+        .chat-item-name {
+            font-size: 13px; font-weight: 600;
+            color: var(--text-dark);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .chat-item.active .chat-item-name { color: #fff; }
+        .chat-item-last {
+            font-size: 11px; color: var(--text-light);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+        .chat-item.active .chat-item-last { color: rgba(255,255,255,0.7); }
+
+        .chat-unread {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: var(--sage-deeper);
+            color: #fff;
+            font-size: 10px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .chat-item.active .chat-unread { background: #fff; color: var(--sage-deeper); }
+
+        /* ─── CHAT MAIN ─── */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+            background: var(--white);
+            margin: 12px 16px 12px 0;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(74,107,80,0.08);
+        }
+
+        /* Chat header */
+        .chat-header {
+            background: var(--sage-deeper);
+            border-radius: 16px 16px 0 0;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-header-avatar {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            overflow: hidden;
+            background: var(--sage-bg);
             display: flex; align-items: center; justify-content: center;
         }
         .chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
         .chat-header-info { flex: 1; }
-        .chat-header-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: #fff;
-        }
+        .chat-header-name { font-size: 15px; font-weight: 700; color: #fff; }
         .chat-header-status {
-            font-size: 12px;
-            color: rgba(255,255,255,0.65);
-            margin-top: 2px;
+            font-size: 12px; color: rgba(255,255,255,0.7);
+            display: flex; align-items: center; gap: 4px; margin-top: 2px;
         }
         .status-dot {
-            display: inline-block;
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            background: #4caf50;
-            margin-right: 5px;
-            vertical-align: middle;
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #69f0ae;
         }
 
-        /* Bubbles area */
+        /* Chat messages */
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 24px 28px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            scroll-behavior: smooth;
+            gap: 12px;
+        }
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        /* Date divider */
+        .msg-date {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-light);
+            font-weight: 500;
+            padding: 4px 0;
         }
 
-        .msg-row {
+        /* Message bubble */
+        .msg-wrap {
             display: flex;
-            align-items: flex-end;
             gap: 8px;
+            max-width: 70%;
         }
-        .msg-row.out {
-            flex-direction: row-reverse;
-        }
+        .msg-wrap.sent { align-self: flex-end; flex-direction: row-reverse; }
+        .msg-wrap.received { align-self: flex-start; }
 
         .msg-avatar {
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            background: #c9b8b8;
-            flex-shrink: 0;
+            width: 30px; height: 30px;
+            border-radius: 50%; flex-shrink: 0;
+            background: var(--sage-bg);
             overflow: hidden;
             display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; color: var(--sage-deeper);
         }
         .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
         .msg-bubble {
-            max-width: 56%;
-            padding: 11px 16px;
-            border-radius: 18px;
-            font-size: 13.5px;
-            line-height: 1.55;
-            word-break: break-word;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.5;
         }
-        .msg-row.in .msg-bubble {
-            background: var(--bubble-in);
-            color: var(--text-dark);
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-        }
-        .msg-row.out .msg-bubble {
-            background: var(--bubble-out);
+        .msg-wrap.sent .msg-bubble {
+            background: #e8f0ee;
             color: var(--text-dark);
             border-bottom-right-radius: 4px;
         }
-
+        .msg-wrap.received .msg-bubble {
+            background: var(--sage-bg);
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
         .msg-time {
             font-size: 10px;
             color: var(--text-light);
             margin-top: 4px;
             text-align: right;
         }
-        .msg-row.in .msg-time { text-align: left; padding-left: 36px; }
-        .msg-row.out .msg-time { text-align: right; padding-right: 36px; }
+        .msg-wrap.received .msg-time { text-align: left; }
 
-        /* Input area */
+        /* Chat input */
         .chat-input-wrap {
-            flex-shrink: 0;
-            padding: 16px 24px;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            background: #fafcfa;
+            border-radius: 0 0 16px 16px;
         }
-
         .chat-input {
             flex: 1;
-            background: rgba(255,255,255,0.65);
             border: none;
-            border-radius: 24px;
-            padding: 13px 20px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 13.5px;
-            color: var(--text-dark);
             outline: none;
-            backdrop-filter: blur(4px);
+            background: var(--cream);
+            border-radius: 24px;
+            padding: 11px 18px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            color: var(--text-dark);
+            resize: none;
         }
-        .chat-input::placeholder { color: #b0a0a0; }
-
+        .chat-input::placeholder { color: var(--text-light); }
         .btn-send {
-            width: 46px; height: 46px;
+            width: 42px; height: 42px;
             border-radius: 50%;
-            background: var(--header-bg);
+            background: var(--sage-deeper);
             border: none;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
             transition: background .2s, transform .15s;
         }
-        .btn-send:hover { background: #2e3830; transform: scale(1.05); }
-        .btn-send svg { color: #fff; }
+        .btn-send:hover { background: var(--sage-dark); transform: scale(1.05); }
 
-        /* ─── RESPONSIVE ──────────────────────────────────── */
-        @media (max-width: 720px) {
-            .chat-wrapper { grid-template-columns: 1fr; }
-            .chat-sidebar { display: none; }
-            .navbar .search-wrap { display: none; }
+        /* Empty state */
+        .chat-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--text-light);
+        }
+        .chat-empty svg { opacity: 0.3; }
+        .chat-empty p { font-size: 14px; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 640px) {
+            .chat-sidebar { width: 70px; padding: 16px 8px; }
+            .chat-item-info { display: none; }
+            .btn-pesan span { display: none; }
+            .search-form { display: none; }
+            .navbar { padding: 0 16px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ══════════════════ NAVBAR ══════════════════ -->
+@include('partials.sidebar')
+
+<!-- NAVBAR -->
 <nav class="navbar">
     <div class="navbar-left">
-        <div class="hamburger">
+        <div class="hamburger" onclick="openSidebar()">
             <span></span><span></span><span></span>
         </div>
         <a href="/" class="brand-wrap">
             <div class="brand-logo">
-                <img src="{{ asset('images/logo.png') }}" alt="Rumantra" width="36" height="36" style="object-fit:contain;">
+                <img src="{{ asset('images/logo.png') }}" alt="Rumantra">
             </div>
             <span class="brand-name">Rumantra</span>
         </a>
     </div>
 
-    <div class="search-wrap">
-        <input type="text" placeholder="cari berdasarkan lokasi, lingkungan">
-        <button class="btn-filter">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-            </svg>
-            Filter
-        </button>
-    </div>
+    <form action="{{ route('kos.search') }}" method="GET" class="search-form">
+        <div class="search-bar">
+            <input type="text" name="q" placeholder="cari berdasarkan lokasi, lingkungan">
+            <button type="submit" class="btn-filter">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+                Filter
+            </button>
+        </div>
+    </form>
 
     <div class="navbar-right">
         <div class="nav-icon">
@@ -366,154 +370,178 @@
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
         </div>
-        <div class="nav-icon">
+        <div class="nav-icon active">
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
         </div>
-        <div class="nav-icon">
+        <a href="{{ route('favorit.index') }}" class="nav-icon" title="Favorit Saya" style="text-decoration:none;">
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-        </div>
+        </a>
     </div>
 </nav>
 
-<!-- ══════════════════ CHAT WRAPPER ══════════════════ -->
+<!-- CHAT WRAPPER -->
 <div class="chat-wrapper">
 
-    <!-- ── SIDEBAR KIRI ── -->
-    <aside class="chat-sidebar">
-        <div class="sidebar-header">
-            <button class="btn-pesan">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                </svg>
-                Pesan
-            </button>
-        </div>
+    <!-- SIDEBAR CHAT LIST -->
+    <div class="chat-sidebar">
+        <button class="btn-pesan">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span>Pesan</span>
+        </button>
 
-        <div class="conversation-list">
-            {{-- Loop semua percakapan yang pernah ada --}}
-            @forelse($conversations as $conv)
-                @php
-                    // Tentukan siapa "lawan bicara" — owner kos atau user biasa
-                    $other = $conv->sender_id === Auth::id() ? $conv->receiver : $conv->sender;
-                    $isActive = $conv->kos_id === $kos->id;
-                @endphp
-                <a href="{{ route('chat.index', $conv->kos_id) }}"
-                   class="conv-item {{ $isActive ? 'active' : '' }}">
-                    <div class="conv-avatar">
-                        @if($other->foto ?? null)
-                            <img src="{{ asset($other->foto) }}" alt="{{ $other->name }}">
-                        @else
-                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        @endif
-                    </div>
-                    <span class="conv-name">{{ $conv->kos->nama ?? $other->name }}</span>
-                </a>
-            @empty
-                {{-- Tidak ada percakapan lain, cukup tampilkan yang aktif --}}
-                <div class="conv-item active">
-                    <div class="conv-avatar">
-                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.5">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </div>
-                    <span class="conv-name">{{ $kos->nama }}</span>
+        <div class="chat-list">
+            {{-- Loop chat dari database --}}
+            {{-- @foreach($chats as $chat) --}}
+
+            <!-- Active chat item -->
+            <div class="chat-item active" onclick="openChat(this)">
+                <div class="chat-avatar">
+                    <span class="chat-avatar-initials">KA</span>
                 </div>
-            @endforelse
-        </div>
-    </aside>
+                <div class="chat-item-info">
+                    <div class="chat-item-name">{{ $owner->name ?? 'Kost Andini' }}</div>
+                    <div class="chat-item-last">Online</div>
+                </div>
+            </div>
 
-    <!-- ── CHAT MAIN ── -->
+            <!-- Other chat items -->
+            <div class="chat-item" onclick="openChat(this)">
+                <div class="chat-avatar">
+                    <span class="chat-avatar-initials">KA</span>
+                </div>
+                <div class="chat-item-info">
+                    <div class="chat-item-name">Kost Andini</div>
+                    <div class="chat-item-last">Baik, terima kasih...</div>
+                </div>
+                <div class="chat-unread">2</div>
+            </div>
+
+            <div class="chat-item" onclick="openChat(this)">
+                <div class="chat-avatar">
+                    <span class="chat-avatar-initials">KA</span>
+                </div>
+                <div class="chat-item-info">
+                    <div class="chat-item-name">Kost Andini</div>
+                    <div class="chat-item-last">Silakan datang...</div>
+                </div>
+            </div>
+
+            {{-- @endforeach --}}
+        </div>
+    </div>
+
+    <!-- CHAT MAIN -->
     <div class="chat-main">
 
         <!-- Header -->
         <div class="chat-header">
             <div class="chat-header-avatar">
-                @if($receiver->foto ?? null)
-                    <img src="{{ asset($receiver->foto) }}" alt="{{ $receiver->name }}">
-                @else
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.5">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                @endif
+                <span style="font-size:16px;font-weight:700;color:var(--sage-deeper)">KA</span>
             </div>
             <div class="chat-header-info">
-                <div class="chat-header-name">{{ $kos->nama }}</div>
+                <div class="chat-header-name">{{ $owner->name ?? 'Kost Andini' }}</div>
                 <div class="chat-header-status">
-                    <span class="status-dot"></span>Online
+                    <div class="status-dot"></div>
+                    Online
                 </div>
             </div>
         </div>
 
-        <!-- Bubbles -->
-        <div class="chat-messages" id="chatMessages">
-            @forelse($messages as $msg)
-                @php $isOut = $msg->sender_id === Auth::id(); @endphp
+        <!-- Messages -->
+        <div class="chat-messages" id="chat-messages">
+
+            <div class="msg-date">Hari ini</div>
+
+            {{-- Loop pesan dari database --}}
+            {{-- @foreach($messages as $msg) --}}
+            {{-- @if($msg->sender_id === Auth::id()) --}}
+
+            <!-- Pesan terkirim (kanan) -->
+            <div class="msg-wrap sent">
                 <div>
-                    <div class="msg-row {{ $isOut ? 'out' : 'in' }}">
-                        @if(!$isOut)
-                            <div class="msg-avatar">
-                                @if($receiver->foto ?? null)
-                                    <img src="{{ asset($receiver->foto) }}" alt="">
-                                @else
-                                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.5">
-                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                        <circle cx="12" cy="7" r="4"/>
-                                    </svg>
-                                @endif
-                            </div>
-                        @endif
-                        <div class="msg-bubble">{{ $msg->pesan }}</div>
+                    <div class="msg-bubble">
+                        Permisi mas aku mau cek, apakah kost masih tersedia atau tidak ya mas?
                     </div>
-                    <div class="msg-time">
-                        {{ $msg->created_at->format('H:i') }}
-                    </div>
+                    <div class="msg-time">10:30</div>
                 </div>
-            @empty
-                {{-- Kosong — tidak perlu pesan apapun, biarkan blank --}}
-            @endforelse
+            </div>
+
+            {{-- @else --}}
+            <!-- Pesan diterima (kiri) -->
+            {{-- <div class="msg-wrap received">
+                <div class="msg-avatar">KA</div>
+                <div>
+                    <div class="msg-bubble">{{ $msg->pesan }}</div>
+                    <div class="msg-time">{{ $msg->created_at->format('H:i') }}</div>
+                </div>
+            </div> --}}
+            {{-- @endif --}}
+            {{-- @endforeach --}}
+
         </div>
 
-        <!-- Input kirim pesan -->
+        <!-- Input -->
         <div class="chat-input-wrap">
-            <form action="{{ route('chat.send') }}" method="POST" style="display:contents">
-                @csrf
-                <input type="hidden" name="kos_id"      value="{{ $kos->id }}">
-                <input type="hidden" name="receiver_id" value="{{ $receiver->id }}">
-                <input
-                    type="text"
-                    name="pesan"
-                    class="chat-input"
-                    placeholder="Ketik pesan..."
-                    autocomplete="off"
-                    required
-                >
-                <button type="submit" class="btn-send">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <line x1="22" y1="2" x2="11" y2="13"/>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                    </svg>
-                </button>
-            </form>
+            <input
+                type="text"
+                class="chat-input"
+                id="chat-input"
+                placeholder="Ketik pesan..."
+                onkeydown="if(event.key==='Enter') kirimPesan()"
+            >
+            <button class="btn-send" onclick="kirimPesan()">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"/>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+            </button>
         </div>
 
-    </div><!-- /chat-main -->
-</div><!-- /chat-wrapper -->
+    </div>
+
+</div>
 
 <script>
-    // Auto scroll ke bawah saat halaman load
-    const chatMessages = document.getElementById('chatMessages');
-    if (chatMessages) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Scroll ke bawah otomatis
+    const msgContainer = document.getElementById('chat-messages');
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+
+    // Kirim pesan (UI only, sambungkan ke backend via AJAX)
+    function kirimPesan() {
+        const input = document.getElementById('chat-input');
+        const teks  = input.value.trim();
+        if (!teks) return;
+
+        const wrap = document.createElement('div');
+        wrap.className = 'msg-wrap sent';
+        wrap.innerHTML = `
+            <div>
+                <div class="msg-bubble">${teks}</div>
+                <div class="msg-time">${waktuSekarang()}</div>
+            </div>
+        `;
+        msgContainer.appendChild(wrap);
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+        input.value = '';
+
+        // TODO: kirim ke backend via fetch/axios
+        // fetch('/chat/kirim', { method: 'POST', body: ... })
+    }
+
+    function waktuSekarang() {
+        const now = new Date();
+        return now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+    }
+
+    function openChat(el) {
+        document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
     }
 </script>
 

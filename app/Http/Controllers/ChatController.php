@@ -20,7 +20,7 @@ class ChatController extends Controller
         $receiver = User::findOrFail($kos->owner_id);  // pemilik kos
 
         // Ambil semua pesan antara user login ↔ pemilik kos ini
-        $chat = Chat::where('kos_id', $kos_id)
+        $messages = Chat::where('kos_id', $kos_id)
             ->where(function ($q) use ($receiver) {
                 $q->where('sender_id',   Auth::id())
                   ->where('receiver_id', $receiver->id);

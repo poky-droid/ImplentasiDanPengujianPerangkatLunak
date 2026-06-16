@@ -31,6 +31,119 @@
             background: var(--cream);
             color: var(--text-dark);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main.main {
+            flex: 1;
+        }
+
+        /* ─── FOOTER ─────────────────────────────────────── */
+        footer {
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 64px 32px 32px;
+            font-family: 'DM Sans', sans-serif;
+            margin-top: auto;
+        }
+        .footer-grid {
+            max-width: 1100px;
+            margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        .footer-logo-wrap {
+            display: flex;
+            align-items: center;
+        }
+        .footer-logo-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .footer-logo-circle img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        .footer-col-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            letter-spacing: -0.2px;
+        }
+        .footer-links {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        .footer-links a {
+            font-size: 13px;
+            color: #4b5563;
+            text-decoration: none;
+            transition: color .2s;
+            font-weight: 400;
+        }
+        .footer-links a:hover {
+            color: #3A5540;
+        }
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+        .social-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #4b5563;
+            transition: border-color .2s, color .2s, background-color .2s;
+            background: #ffffff;
+        }
+        .social-btn:hover {
+            border-color: #3A5540;
+            color: #3A5540;
+            background-color: #EDF3EE;
+        }
+        .social-btn svg {
+            fill: currentColor;
+            width: 14px;
+            height: 14px;
+        }
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            padding-top: 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+        .footer-bottom a {
+            color: inherit;
+            text-decoration: none;
+            margin: 0 4px;
+        }
+        .footer-bottom a:hover {
+            color: #4b5563;
         }
 
         /* ─── NAVBAR ─────────────────────────────────────── */
@@ -117,6 +230,236 @@
             display: flex; align-items: center;
         }
         .nav-icon:hover { color: var(--sage-deeper); }
+
+        /* ─── FAVORIT BUTTON ────────────────────────────── */
+        .btn-favorit {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.92);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .btn-favorit:hover { transform: scale(1.12); background: #fff; }
+        .btn-favorit svg {
+            transition: fill 0.2s ease, stroke 0.2s ease;
+            fill: none;
+            stroke: #9ca3af;
+            stroke-width: 1.8;
+        }
+        .btn-favorit.active svg {
+            fill: #ef4444;
+            stroke: #ef4444;
+        }
+        .btn-favorit.pop {
+            animation: heartPop 0.35s ease;
+        }
+        @keyframes heartPop {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.4); }
+            70%  { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        /* Toast favorit */
+        .fav-toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(12px);
+            background: #1a1a1a;
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s, transform 0.25s;
+            z-index: 9999;
+            white-space: nowrap;
+        }
+        .fav-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ─── NOTIFICATION PANEL ─────────────────────────── */
+        .bell-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .bell-badge {
+            position: absolute;
+            top: -4px;
+            right: -5px;
+            width: 16px;
+            height: 16px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            font-size: 9px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .notif-panel {
+            position: absolute;
+            top: calc(100% + 18px);
+            right: -12px;
+            width: 370px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid rgba(107,143,113,0.12);
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(-8px) scale(0.97);
+            pointer-events: none;
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            max-height: 520px;
+            display: flex;
+            flex-direction: column;
+        }
+        .notif-panel.open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+        }
+        .notif-panel::before {
+            content: '';
+            position: absolute;
+            top: -7px;
+            right: 20px;
+            width: 13px;
+            height: 13px;
+            background: #fff;
+            border-left: 1px solid rgba(107,143,113,0.12);
+            border-top: 1px solid rgba(107,143,113,0.12);
+            transform: rotate(45deg);
+            border-radius: 2px 0 0 0;
+        }
+        .notif-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .notif-header-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .notif-mark-all {
+            font-size: 12px;
+            color: #6b8f71;
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+            padding: 0;
+        }
+        .notif-mark-all:hover { color: #4a6b50; text-decoration: underline; }
+        .notif-list {
+            overflow-y: auto;
+            flex: 1;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(107,143,113,0.25) transparent;
+        }
+        .notif-list::-webkit-scrollbar { width: 4px; }
+        .notif-list::-webkit-scrollbar-thumb { background: rgba(107,143,113,0.3); border-radius: 4px; }
+        .notif-date-sep {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #aaa;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .notif-date-sep::before, .notif-date-sep::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #f0f0f0;
+        }
+        .notif-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 13px 20px;
+            transition: background 0.15s;
+            cursor: pointer;
+            border-bottom: 1px solid #fafafa;
+        }
+        .notif-item:hover { background: #f8faf8; }
+        .notif-item:last-child { border-bottom: none; }
+        .notif-dot {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+        .notif-dot.green  { background: #d1fae5; }
+        .notif-dot.blue   { background: #dbeafe; }
+        .notif-dot.red    { background: #fee2e2; }
+        .notif-dot.yellow { background: #fef9c3; }
+        .notif-dot-inner {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .notif-dot.green  .notif-dot-inner { background: #10b981; }
+        .notif-dot.blue   .notif-dot-inner { background: #3b82f6; }
+        .notif-dot.red    .notif-dot-inner { background: #ef4444; }
+        .notif-dot.yellow .notif-dot-inner { background: #f59e0b; }
+        .notif-content { flex: 1; min-width: 0; }
+        .notif-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 3px;
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.3;
+        }
+        .notif-desc {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .notif-time {
+            font-size: 11px;
+            color: #aab4be;
+            font-family: 'DM Sans', sans-serif;
+        }
 
         /* ─── MAIN CONTENT ───────────────────────────────── */
         .main {
@@ -355,11 +698,11 @@
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
         </div>
-        <div class="nav-icon">
+        <a href="{{ route('favorit.index') }}" class="nav-icon" title="Favorit Saya" style="text-decoration:none;">
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-        </div>
+        </a>
     </div>
 </nav>
 
@@ -392,6 +735,9 @@
                     <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
                 </div>
                 <span class="kos-badge badge-exclusive">Eksklusif</span>
+                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(1) ? 'active' : '' }}" data-kos-id="1" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
             </div>
             <div class="kos-body">
                 <div class="kos-name">Kos Putri Melati</div>
@@ -416,6 +762,9 @@
                     <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
                 </div>
                 <span class="kos-badge badge-exclusive">Eksklusif</span>
+                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(2) ? 'active' : '' }}" data-kos-id="2" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
             </div>
             <div class="kos-body">
                 <div class="kos-name">Kos Putri Melati</div>
@@ -440,6 +789,9 @@
                     <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
                 </div>
                 <span class="kos-badge badge-exclusive">Eksklusif</span>
+                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(3) ? 'active' : '' }}" data-kos-id="3" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
             </div>
             <div class="kos-body">
                 <div class="kos-name">Kos Putri Melati</div>
@@ -453,7 +805,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="{{ route('kos.show', 3) }}" class="btn-detail">Lihat Detail</a>
+                <a href="{{ route('kos.show', 3) }}" class="btn-detail" >Lihat Detail</a>
             </div>
         </div>
 
@@ -464,6 +816,9 @@
                     <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
                 </div>
                 <span class="kos-badge badge-exclusive">Eksklusif</span>
+                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(4) ? 'active' : '' }}" data-kos-id="4" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
             </div>
             <div class="kos-body">
                 <div class="kos-name">Kos Putri Melati</div>
@@ -488,6 +843,9 @@
                     <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
                 </div>
                 <span class="kos-badge badge-exclusive">Eksklusif</span>
+                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(5) ? 'active' : '' }}" data-kos-id="5" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
             </div>
             <div class="kos-body">
                 <div class="kos-name">Kos Putri Melati</div>
@@ -512,6 +870,9 @@
                     <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
                 </div>
                 <span class="kos-badge badge-exclusive">Eksklusif</span>
+                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(6) ? 'active' : '' }}" data-kos-id="6" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
             </div>
             <div class="kos-body">
                 <div class="kos-name">Kos Putri Melati</div>
@@ -536,6 +897,9 @@
                     <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
                 </div>
                 <span class="kos-badge badge-exclusive">Eksklusif</span>
+                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(7) ? 'active' : '' }}" data-kos-id="7" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
             </div>
             <div class="kos-body">
                 <div class="kos-name">Kos Putri Melati</div>
@@ -560,6 +924,9 @@
                     <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
                 </div>
                 <span class="kos-badge badge-exclusive">Eksklusif</span>
+                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(8) ? 'active' : '' }}" data-kos-id="8" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
             </div>
             <div class="kos-body">
                 <div class="kos-name">Kos Putri Melati</div>
@@ -592,6 +959,124 @@
     </div>
 
 </main>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-logo-wrap">
+            <div class="footer-logo-circle">
+                <img src="{{ asset('images/logo.png') }}" alt="Rumantra">
+            </div>
+        </div>
+        <div>
+            <div class="footer-col-title">Resource</div>
+            <ul class="footer-links">
+                <li><a href="#">Help center</a></li>
+                <li><a href="#">Security</a></li>
+                <li><a href="#">Privacy policy</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="footer-col-title">Company</div>
+            <ul class="footer-links">
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Contact us</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="footer-col-title">Social</div>
+            <div class="footer-social">
+                <div class="social-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </div>
+                <div class="social-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                    </svg>
+                </div>
+                <div class="social-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 Rumantra &nbsp;•&nbsp; Teman Mahasiswa Cari Kos &nbsp;•&nbsp; <a href="#">Kebijakan Privasi</a> &nbsp;•&nbsp; <a href="#">Syarat & Ketentuan</a>
+    </div>
+</footer>
+
+<!-- Favorit toast element -->
+<div class="fav-toast" id="favToast"></div>
+
+<script>
+    // ── NOTIFICATION PANEL ──────────────────────────────
+    function toggleNotif(e) {
+        e.stopPropagation();
+        document.getElementById('notifPanel').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+        const wrapper = document.getElementById('bellWrapper');
+        const panel   = document.getElementById('notifPanel');
+        if (wrapper && !wrapper.contains(e.target)) panel.classList.remove('open');
+    });
+    function markAllRead() {
+        const badge = document.getElementById('bellBadge');
+        if (badge) badge.style.display = 'none';
+    }
+
+    // ── FAVORIT TOGGLE ──────────────────────────────────
+    const isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+    const csrfToken  = '{{ csrf_token() }}';
+    const loginUrl   = '{{ route("login") }}';
+
+    function toggleFavorit(btn) {
+        // Kalau belum login, arahkan ke login
+        if (!isLoggedIn) {
+            showFavToast('Silakan login untuk menyimpan favorit ❤️');
+            setTimeout(() => { window.location.href = loginUrl; }, 1200);
+            return;
+        }
+
+        const kosId = btn.dataset.kosId;
+
+        fetch(`/favorit/${kosId}/toggle`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.favorited) {
+                btn.classList.add('active', 'pop');
+                showFavToast('❤️ Ditambahkan ke favorit');
+            } else {
+                btn.classList.remove('active');
+                btn.classList.add('pop');
+                showFavToast('Dihapus dari favorit');
+            }
+            // Hapus class pop setelah animasi selesai
+            btn.addEventListener('animationend', () => btn.classList.remove('pop'), { once: true });
+        })
+        .catch(() => showFavToast('Terjadi kesalahan, coba lagi.'));
+    }
+
+    function showFavToast(msg) {
+        const toast = document.getElementById('favToast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+</script>
 
 </body>
 </html>

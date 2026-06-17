@@ -12,6 +12,23 @@ class KosController extends Controller
         return view('kos-listing');
     }
 
+    public function listing(Request $request)
+    {
+        $kategori = $request->get('kategori');
+
+        $query = Kos::query();
+
+        if ($kategori === 'exclusive') {
+            $query->where('is_eksklusif', true);
+        } elseif (in_array($kategori, ['putri', 'putra', 'campur'])) {
+            $query->where('tipe', $kategori);
+        }
+
+        $kosList = $query->latest()->paginate(8);
+
+        return view('kos-listing', compact('kosList', 'kategori'));
+    }
+
     public function show($id)
     {
         $kos = Kos::findOrFail($id);

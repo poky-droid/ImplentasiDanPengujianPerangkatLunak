@@ -25,6 +25,7 @@ use App\Http\Controllers\FavoritController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
 Route::get('/kos/search', [KosController::class, 'search'])->name('kos.search');
+Route::get('/kos/listing', [KosController::class, 'listing'])->name('kos.listing');
 Route::get('/kos/{id}', [KosController::class, 'show'])->name('kos.show');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');

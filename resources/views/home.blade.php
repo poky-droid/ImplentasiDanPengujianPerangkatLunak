@@ -527,8 +527,8 @@
     <h1>TEMUKAN KOS <em>IMPIANMU</em> UNTUK MAHASISWA</h1>
     <p>Kami membantu kamu menemukan kos yang nyaman, aman, dan sesuai budget di sekitar kampusmu. Lebih dari 500 pilihan tersedia!</p>
     <div class="hero-actions">
-        <button class="btn-hero-primary">Cari Kos Sekarang</button>
-        <button class="btn-hero-secondary">Lihat Semua</button>
+        <a href="{{ route('kos.search') }}" class="btn-hero-primary">Cari Kos Sekarang</a>
+        <a href="{{ route('kos.index') }}" class="btn-hero-secondary">Lihat Semua</a>
     </div>
 </section>
 
@@ -536,7 +536,7 @@
 <div class="explore">
     <p class="explore-title">Explore Rumantra</p>
     <div class="explore-grid">
-        <div class="explore-item">
+        <a href="{{ route('kos.listing', ['kategori' => 'exclusive']) }}" class="explore-item" style="text-decoration:none;">
             <div class="explore-icon">
                 <svg width="36" height="36" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.85)" stroke-width="1.5">
                     <rect x="8" y="14" width="32" height="24" rx="3"/>
@@ -546,8 +546,8 @@
                 </svg>
             </div>
             <span class="explore-label">Exclusive</span>
-        </div>
-        <div class="explore-item">
+        </a>
+        <a href="{{ route('kos.listing', ['kategori' => 'campur']) }}" class="explore-item" style="text-decoration:none;">
             <div class="explore-icon">
                 <svg width="36" height="36" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.85)" stroke-width="1.5">
                     <path d="M10 38V18l14-8 14 8v20"/>
@@ -556,8 +556,8 @@
                 </svg>
             </div>
             <span class="explore-label">Campur</span>
-        </div>
-        <div class="explore-item">
+        </a>
+        <a href="{{ route('kos.listing', ['kategori' => 'putri']) }}" class="explore-item" style="text-decoration:none;">
             <div class="explore-icon">
                 <svg width="36" height="36" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.85)" stroke-width="1.5">
                     <path d="M10 38V18l14-8 14 8v20"/>
@@ -566,8 +566,8 @@
                 </svg>
             </div>
             <span class="explore-label">Putri</span>
-        </div>
-        <div class="explore-item">
+        </a>
+        <a href="{{ route('kos.listing', ['kategori' => 'putra']) }}" class="explore-item" style="text-decoration:none;">
             <div class="explore-icon">
                 <svg width="36" height="36" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.85)" stroke-width="1.5">
                     <path d="M8 38V20l16-10 16 10v18"/>
@@ -576,7 +576,8 @@
                 </svg>
             </div>
             <span class="explore-label">Putra</span>
-        </div>
+        </a>
+
     </div>
 </div>
 

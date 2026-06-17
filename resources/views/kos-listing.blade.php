@@ -711,8 +711,30 @@
 
     <div class="page-header">
         <div>
-            <div class="page-title">Semua Kos Tersedia</div>
-            <div class="page-count">Menampilkan 320 kos ditemukan</div>
+            @php
+                $judulKategori = match($kategori ?? null) {
+                    'exclusive' => 'Kos Exclusive',
+                    'putri'     => 'Kos Putri',
+                    'putra'     => 'Kos Putra',
+                    'campur'    => 'Kos Campur',
+                    default     => 'Semua Kos Tersedia',
+                };
+            @endphp
+            <div class="page-title">
+                {{ $judulKategori }}
+                @if(!empty($kategori))
+                    <span style="display:inline-block;margin-left:8px;padding:2px 12px;background:var(--sage);color:#fff;border-radius:999px;font-size:12px;font-weight:600;vertical-align:middle;text-transform:capitalize;">
+                        {{ $kategori }}
+                    </span>
+                @endif
+            </div>
+            <div class="page-count">
+                @if(isset($kosList))
+                    Menampilkan {{ $kosList->total() }} kos ditemukan
+                @else
+                    Menampilkan semua kos tersedia
+                @endif
+            </div>
         </div>
         <div class="sort-wrap">
             Urutkan:
@@ -728,223 +750,88 @@
     <!-- KOS GRID -->
     <div class="kos-grid">
 
-        <!-- Card 1 -->
-        <div class="kos-card">
-            <div class="kos-img-wrap">
-                <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d4c9b0,#a89878)">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
+        @if(isset($kosList) && $kosList->count() > 0)
+            @foreach($kosList as $kos)
+            <div class="kos-card">
+                <div class="kos-img-wrap">
+                    @if($kos->foto_utama)
+                        <img src="{{ asset('storage/' . $kos->foto_utama) }}" alt="{{ $kos->nama }}"
+                             style="width:100%;height:100%;object-fit:cover;">
+                    @else
+                        <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d4c9b0,#a89878)">
+                            <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
+                        </div>
+                    @endif
+                    @if($kos->is_eksklusif)
+                        <span class="kos-badge badge-exclusive">Eksklusif</span>
+                    @endif
+                    <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit($kos->id) ? 'active' : '' }}"
+                            data-kos-id="{{ $kos->id }}" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </button>
                 </div>
-                <span class="kos-badge badge-exclusive">Eksklusif</span>
-                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(1) ? 'active' : '' }}" data-kos-id="1" onclick="toggleFavorit(this)" title="Tambah ke favorit">
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
+                <div class="kos-body">
+                    <div class="kos-name">{{ $kos->nama }}</div>
+                    <div class="kos-loc">
+                        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        {{ $kos->alamat }}
+                    </div>
+                    <div class="kos-price">{{ $kos->harga_format }} <span>/bulan</span></div>
+                    <div class="kos-tags">
+                        <span class="kos-tag" style="text-transform:capitalize;">{{ $kos->tipe }}</span>
+                        @if($kos->fasilitas)
+                            @foreach(array_slice($kos->fasilitas, 0, 2) as $fas)
+                                <span class="kos-tag">{{ $fas }}</span>
+                            @endforeach
+                        @endif
+                    </div>
+                    <a href="{{ route('kos.show', $kos->id) }}" class="btn-detail">Lihat Detail</a>
+                </div>
             </div>
-            <div class="kos-body">
-                <div class="kos-name">Kos Putri Melati</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan
-                </div>
-                <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
-                <div class="kos-tags">
-                    <span class="kos-tag">Rp 1.6jt</span>
-                    <span class="kos-tag">AC</span>
-                    <span class="kos-tag">WiFi</span>
-                </div>
-                <a href="{{ route('kos.show', 1) }}" class="btn-detail">Lihat Detail</a>
-            </div>
-        </div>
+            @endforeach
 
-        <!-- Card 2 -->
-        <div class="kos-card">
-            <div class="kos-img-wrap">
-                <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c9d4c0,#8a9878)">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-                </div>
-                <span class="kos-badge badge-exclusive">Eksklusif</span>
-                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(2) ? 'active' : '' }}" data-kos-id="2" onclick="toggleFavorit(this)" title="Tambah ke favorit">
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
+        @elseif(isset($kosList) && $kosList->count() === 0)
+            <div style="grid-column:1/-1;text-align:center;padding:64px 0;color:var(--text-light);">
+                <svg width="56" height="56" fill="none" viewBox="0 0 48 48" stroke="currentColor" stroke-width="1.2" style="opacity:.4;margin-bottom:16px;display:block;margin-inline:auto;">
+                    <path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/>
+                </svg>
+                <p style="font-size:18px;font-weight:600;margin-bottom:8px;">Belum ada kos kategori ini</p>
+                <p style="font-size:14px;">Coba kategori lain atau <a href="{{ route('kos.listing') }}" style="color:var(--sage);font-weight:600;">lihat semua kos</a>.</p>
             </div>
-            <div class="kos-body">
-                <div class="kos-name">Kos Putri Melati</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan
-                </div>
-                <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
-                <div class="kos-tags">
-                    <span class="kos-tag">Rp 1.6jt</span>
-                    <span class="kos-tag">AC</span>
-                    <span class="kos-tag">WiFi</span>
-                </div>
-                <a href="{{ route('kos.show', 2) }}" class="btn-detail">Lihat Detail</a>
-            </div>
-        </div>
 
-        <!-- Card 3 -->
-        <div class="kos-card">
-            <div class="kos-img-wrap">
-                <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c0c9d4,#7888a0)">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
+        @else
+            {{-- Fallback: data statis jika diakses lewat route lama (kos.index) --}}
+            @for($i = 1; $i <= 8; $i++)
+            <div class="kos-card">
+                <div class="kos-img-wrap">
+                    <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d4c9b0,#a89878)">
+                        <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
+                    </div>
+                    <span class="kos-badge badge-exclusive">Eksklusif</span>
+                    <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit($i) ? 'active' : '' }}" data-kos-id="{{ $i }}" onclick="toggleFavorit(this)" title="Tambah ke favorit">
+                        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </button>
                 </div>
-                <span class="kos-badge badge-exclusive">Eksklusif</span>
-                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(3) ? 'active' : '' }}" data-kos-id="3" onclick="toggleFavorit(this)" title="Tambah ke favorit">
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
+                <div class="kos-body">
+                    <div class="kos-name">Kos Putri Melati</div>
+                    <div class="kos-loc">
+                        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Jl. Jatiwaras, Purwokerto Selatan
+                    </div>
+                    <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
+                    <div class="kos-tags">
+                        <span class="kos-tag">Rp 1.6jt</span>
+                        <span class="kos-tag">AC</span>
+                        <span class="kos-tag">WiFi</span>
+                    </div>
+                    <a href="{{ route('kos.show', $i) }}" class="btn-detail">Lihat Detail</a>
+                </div>
             </div>
-            <div class="kos-body">
-                <div class="kos-name">Kos Putri Melati</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan
-                </div>
-                <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
-                <div class="kos-tags">
-                    <span class="kos-tag">Rp 1.6jt</span>
-                    <span class="kos-tag">AC</span>
-                    <span class="kos-tag">WiFi</span>
-                </div>
-                <a href="{{ route('kos.show', 3) }}" class="btn-detail" >Lihat Detail</a>
-            </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="kos-card">
-            <div class="kos-img-wrap">
-                <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d4c0c9,#a07888)">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-                </div>
-                <span class="kos-badge badge-exclusive">Eksklusif</span>
-                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(4) ? 'active' : '' }}" data-kos-id="4" onclick="toggleFavorit(this)" title="Tambah ke favorit">
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-            </div>
-            <div class="kos-body">
-                <div class="kos-name">Kos Putri Melati</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan
-                </div>
-                <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
-                <div class="kos-tags">
-                    <span class="kos-tag">Rp 1.6jt</span>
-                    <span class="kos-tag">AC</span>
-                    <span class="kos-tag">WiFi</span>
-                </div>
-                <a href="{{ route('kos.show', 4) }}" class="btn-detail">Lihat Detail</a>
-            </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="kos-card">
-            <div class="kos-img-wrap">
-                <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c9d0c4,#889078)">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-                </div>
-                <span class="kos-badge badge-exclusive">Eksklusif</span>
-                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(5) ? 'active' : '' }}" data-kos-id="5" onclick="toggleFavorit(this)" title="Tambah ke favorit">
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-            </div>
-            <div class="kos-body">
-                <div class="kos-name">Kos Putri Melati</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan
-                </div>
-                <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
-                <div class="kos-tags">
-                    <span class="kos-tag">Rp 1.6jt</span>
-                    <span class="kos-tag">AC</span>
-                    <span class="kos-tag">WiFi</span>
-                </div>
-                <a href="{{ route('kos.show', 5) }}" class="btn-detail">Lihat Detail</a>
-            </div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="kos-card">
-            <div class="kos-img-wrap">
-                <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d0c4c9,#908088)">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-                </div>
-                <span class="kos-badge badge-exclusive">Eksklusif</span>
-                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(6) ? 'active' : '' }}" data-kos-id="6" onclick="toggleFavorit(this)" title="Tambah ke favorit">
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-            </div>
-            <div class="kos-body">
-                <div class="kos-name">Kos Putri Melati</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan
-                </div>
-                <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
-                <div class="kos-tags">
-                    <span class="kos-tag">Rp 1.6jt</span>
-                    <span class="kos-tag">AC</span>
-                    <span class="kos-tag">WiFi</span>
-                </div>
-                <a href="{{ route('kos.show', 6) }}" class="btn-detail">Lihat Detail</a>
-            </div>
-        </div>
-
-        <!-- Card 7 -->
-        <div class="kos-card">
-            <div class="kos-img-wrap">
-                <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c4c9d0,#788090)">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-                </div>
-                <span class="kos-badge badge-exclusive">Eksklusif</span>
-                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(7) ? 'active' : '' }}" data-kos-id="7" onclick="toggleFavorit(this)" title="Tambah ke favorit">
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-            </div>
-            <div class="kos-body">
-                <div class="kos-name">Kos Putri Melati</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan
-                </div>
-                <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
-                <div class="kos-tags">
-                    <span class="kos-tag">Rp 1.6jt</span>
-                    <span class="kos-tag">AC</span>
-                    <span class="kos-tag">WiFi</span>
-                </div>
-                <a href="{{ route('kos.show', 7) }}" class="btn-detail">Lihat Detail</a>
-            </div>
-        </div>
-
-        <!-- Card 8 -->
-        <div class="kos-card">
-            <div class="kos-img-wrap">
-                <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d0c9c4,#908878)">
-                    <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-                </div>
-                <span class="kos-badge badge-exclusive">Eksklusif</span>
-                <button class="btn-favorit {{ auth()->check() && auth()->user()->isFavorit(8) ? 'active' : '' }}" data-kos-id="8" onclick="toggleFavorit(this)" title="Tambah ke favorit">
-                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-            </div>
-            <div class="kos-body">
-                <div class="kos-name">Kos Putri Melati</div>
-                <div class="kos-loc">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Jl. Jatiwaras, Purwokerto Selatan
-                </div>
-                <div class="kos-price">Rp 1.600.000 <span>/bulan</span></div>
-                <div class="kos-tags">
-                    <span class="kos-tag">Rp 1.6jt</span>
-                    <span class="kos-tag">AC</span>
-                    <span class="kos-tag">WiFi</span>
-                </div>
-                <a href="{{ route('kos.show', 8) }}" class="btn-detail">Lihat Detail</a>
-            </div>
-        </div>
+            @endfor
+        @endif
 
     </div>
+
 
     <!-- PAGINATION -->
     <div class="pagination">

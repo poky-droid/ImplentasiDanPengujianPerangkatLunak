@@ -13,6 +13,7 @@
             --sage-deeper: #3A5540;
             --sage-dark:   #4A6B50;
             --sage-light:  #A8C5AC;
+            --sage-bg:     #EDF3EE;
             --white:       #FFFFFF;
             --text-dark:   #1E2D22;
             --text-light:  #9AA89D;
@@ -54,7 +55,22 @@
             font-size: 26px;
             font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 28px;
+            margin-bottom: 6px;
+        }
+
+        .role-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--sage-bg);
+            border: 1.5px solid var(--sage-light);
+            color: var(--sage-deeper);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            width: fit-content;
         }
 
         .form-group { margin-bottom: 12px; }
@@ -146,12 +162,26 @@
     <div class="form-side">
         <div class="page-title">Daftar</div>
 
+        @php
+            $roleParam = request('role', old('role', 'pencari'));
+            $roleLabel = $roleParam === 'owner' ? '🏠 Pemilik Kos' : '🔍 Pencari Kos';
+        @endphp
+
+        <div class="role-hint">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            {{ $roleLabel }}
+        </div>
+
         @if($errors->any())
         <div class="alert-error">{{ $errors->first() }}</div>
         @endif
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
+            <input type="hidden" name="role" value="{{ $roleParam }}">
 
             <div class="form-group">
                 <input type="text" name="name"

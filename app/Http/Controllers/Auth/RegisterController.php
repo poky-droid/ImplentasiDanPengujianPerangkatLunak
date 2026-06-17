@@ -22,6 +22,7 @@ class RegisterController extends Controller
             'email'                 => 'required|email|unique:users,email',
             'phone'                 => 'nullable|string|max:20',
             'password'              => 'required|min:8|confirmed',
+            'role'                  => 'nullable|in:owner,pencari',
         ], [
             'name.required'         => 'Nama lengkap wajib diisi.',
             'email.required'        => 'Email wajib diisi.',
@@ -36,6 +37,7 @@ class RegisterController extends Controller
             'name'     => $request->name,
             'email'    => $request->email,
             'phone'    => $request->phone,
+            'role'     => $request->input('role', 'pencari'),
             'password' => Hash::make($request->password),
         ]);
 

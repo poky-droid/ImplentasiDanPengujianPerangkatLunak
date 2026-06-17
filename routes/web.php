@@ -17,6 +17,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FavoritController;
 use App\Http\Controllers\Owner\KosController as OwnerKosController;
+use App\Http\Controllers\NotifikasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +29,7 @@ Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
 Route::get('/kos/search', [KosController::class, 'search'])->name('kos.search');
 Route::get('/kos/{id}', [KosController::class, 'show'])->name('kos.show');
 // allow owners to create kos via /kos/create (used in templates)
-Route::get('/kos/create', [OwnerKosController::class, 'create'])->name('kos.create')->middleware('auth');
+Route::get('/kos/create', [OwnerKosController::class, 'create'])->name('kos.create')->middleware(['auth','owner']);
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -86,9 +87,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/owner/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard');
+    Route::get('/owner/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard')->middleware('owner');
     // Owner-managed kos routes
-    Route::prefix('owner')->name('owner.')->middleware('auth')->group(function () {
+    Route::prefix('owner')->name('owner.')->middleware(['auth','owner'])->group(function () {
         Route::resource('kos', OwnerKosController::class)->except(['show']);
     });
     Route::resource('notifikasi', NotifikasiController::class);

@@ -39,6 +39,11 @@ class LoginController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
+        // Redirect owner users to owner dashboard
+        if ($user->role === 'owner') {
+            return redirect()->route('owner.dashboard');
+        }
+
         // Redirect regular users to home page
         return redirect('/');
     }

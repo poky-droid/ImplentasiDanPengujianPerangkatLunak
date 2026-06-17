@@ -16,14 +16,42 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // Create user logic
-        return redirect()->route('admin.users.index');
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|string|max:30',
+            'password' => 'required|string|min:8',
+            'status' => 'nullable|in:aktif,nonaktif'
+        ]);
+
+        User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
+            'password' => bcrypt($data['password']),
+            'status' => $data['status'] ?? 'aktif',
+        ]);
+
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan.');
     }
 
     public function update(Request $request, User $user)
     {
-        // Update user logic
-        return redirect()->route('admin.users.index');
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:30',
+            'status' => 'nullable|in:aktif,nonaktif'
+        ]);
+
+        $user->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? $user->phone,
+            'status' => $data['status'] ?? $user->status,
+        ]);
+
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil diupdate.');
     }
 
     public function destroy(User $user)

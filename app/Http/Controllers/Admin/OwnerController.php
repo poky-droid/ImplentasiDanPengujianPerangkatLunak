@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Owner;
+use App\Models\Kos;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class OwnerController extends Controller
@@ -30,5 +32,15 @@ class OwnerController extends Controller
     {
         $owner->delete();
         return redirect()->route('admin.owners.index');
+    }
+
+    public function dashboard()
+    {
+        $kosList = Kos::where('owner_id', Auth::id())
+            ->latest()
+            ->take(8)
+            ->get();
+
+        return view('owner.dashboard', compact('kosList'));
     }
 }

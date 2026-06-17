@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('kamars', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('properti_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('properti_id');
+            $table->foreign('properti_id', 'kamars_properti_id_fk')
+                  ->references('id')
+                  ->on('propertis')
+                  ->onDelete('cascade');
             $table->integer('harga');
             $table->enum('status',['tersedia','terisi']);
             $table->timestamps();

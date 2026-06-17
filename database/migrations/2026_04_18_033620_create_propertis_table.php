@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('propertis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owner_id')->constrained()->onDelete('cascade');
+            // define owner_id and give the foreign key an explicit unique name
+            $table->unsignedBigInteger('owner_id');
+            $table->foreign('owner_id', 'propertis_owner_id_fk')
+                  ->references('id')
+                  ->on('owners')
+                  ->onDelete('cascade');
             $table->string('nama');
             $table->string('lokasi');
             $table->text('fasilitas');

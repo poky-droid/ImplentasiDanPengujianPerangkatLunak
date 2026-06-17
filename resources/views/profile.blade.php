@@ -312,7 +312,7 @@
             <div class="field-group">
                 <label class="field-label">Tanggal Lahir</label>
                 <input type="date" name="tanggal_lahir" class="field-value" readonly
-                    value="{{ old('tanggal_lahir', Auth::user()->tanggal_lahir) }}">
+                    value="{{ old('tanggal_lahir', Auth::user()->tanggal_lahir?->format('Y-m-d')) }}">
             </div>
 
             <div class="field-group">

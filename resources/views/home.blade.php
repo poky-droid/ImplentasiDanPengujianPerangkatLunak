@@ -588,119 +588,36 @@
     </div>
 
     <div class="kos-grid">
-        <div class="kos-card">
+    @forelse ($kosList as $kos)
+        <a href="{{ route('kos.show', $kos->id) }}" class="kos-card" style="display:block; text-decoration:none; color:inherit;">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c9d9ca,#9ab09c)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
+                @if($kos->foto_utama)
+                    <img src="{{ asset('storage/' . $kos->foto_utama) }}" alt="{{ $kos->nama }}" style="width:100%; height:100%; object-fit:cover;">
+                @else
+                    <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
+                @endif
             </div>
             <div class="kos-body">
-                <span class="kos-type-badge badge-putri">Putri</span>
-                <div class="kos-name">Kos Melati Indah</div>
-                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Veteran No.12, Malang</div>
+                @php
+                    $badgeClass = $kos->is_eksklusif ? 'badge-exclusive' : 'badge-' . $kos->tipe;
+                    $badgeLabel = $kos->is_eksklusif ? 'Exclusive' : ucfirst($kos->tipe);
+                @endphp
+                <span class="kos-type-badge {{ $badgeClass }}">{{ $badgeLabel }}</span>
+                <div class="kos-name">{{ $kos->nama }}</div>
+                <div class="kos-loc">
+                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    {{ $kos->alamat }}
+                </div>
                 <div class="kos-price-row">
-                    <div class="kos-price">Rp 700K <span>/bulan</span></div>
-                    <div class="kos-rating">★ 4.8</div>
+                    <div class="kos-price">{{ $kos->harga_format }} <span>/bulan</span></div>
+                    <div class="kos-rating">★ {{ number_format($kos->rating ?? 0, 1) }}</div>
                 </div>
             </div>
-        </div>
-        <div class="kos-card">
-            <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d9c9c0,#b09a8a)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-            </div>
-            <div class="kos-body">
-                <span class="kos-type-badge badge-putra">Putra</span>
-                <div class="kos-name">Kos Sejahtera Jaya</div>
-                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Soekarno Hatta, Malang</div>
-                <div class="kos-price-row">
-                    <div class="kos-price">Rp 500K <span>/bulan</span></div>
-                    <div class="kos-rating">★ 4.5</div>
-                </div>
-            </div>
-        </div>
-        <div class="kos-card">
-            <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c9d9d5,#8ab0a8)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-            </div>
-            <div class="kos-body">
-                <span class="kos-type-badge badge-campur">Campur</span>
-                <div class="kos-name">Green House Kos</div>
-                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Gajayana No.5, Malang</div>
-                <div class="kos-price-row">
-                    <div class="kos-price">Rp 850K <span>/bulan</span></div>
-                    <div class="kos-rating">★ 4.9</div>
-                </div>
-            </div>
-        </div>
-        <div class="kos-card">
-            <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d9d0c0,#b0a070)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-            </div>
-            <div class="kos-body">
-                <span class="kos-type-badge badge-exclusive">Exclusive</span>
-                <div class="kos-name">Villa Kos Exclusive</div>
-                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Diponegoro No.8, Malang</div>
-                <div class="kos-price-row">
-                    <div class="kos-price">Rp 1.5Jt <span>/bulan</span></div>
-                    <div class="kos-rating">★ 5.0</div>
-                </div>
-            </div>
-        </div>
-        <div class="kos-card">
-            <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c0c9d9,#708ab0)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-            </div>
-            <div class="kos-body">
-                <span class="kos-type-badge badge-putra">Putra</span>
-                <div class="kos-name">Kos Bintang Timur</div>
-                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Ahmad Yani No.3, Malang</div>
-                <div class="kos-price-row">
-                    <div class="kos-price">Rp 600K <span>/bulan</span></div>
-                    <div class="kos-rating">★ 4.6</div>
-                </div>
-            </div>
-        </div>
-        <div class="kos-card">
-            <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d0c9d9,#9088b0)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-            </div>
-            <div class="kos-body">
-                <span class="kos-type-badge badge-putri">Putri</span>
-                <div class="kos-name">Kos Mawar Merah</div>
-                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Kawi Raya No.17, Malang</div>
-                <div class="kos-price-row">
-                    <div class="kos-price">Rp 750K <span>/bulan</span></div>
-                    <div class="kos-rating">★ 4.7</div>
-                </div>
-            </div>
-        </div>
-        <div class="kos-card">
-            <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c9d5d0,#8ab08a)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-            </div>
-            <div class="kos-body">
-                <span class="kos-type-badge badge-campur">Campur</span>
-                <div class="kos-name">Kos Harmoni Asri</div>
-                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Sukarno No.22, Malang</div>
-                <div class="kos-price-row">
-                    <div class="kos-price">Rp 650K <span>/bulan</span></div>
-                    <div class="kos-rating">★ 4.4</div>
-                </div>
-            </div>
-        </div>
-        <div class="kos-card">
-            <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d9c9d0,#b08088)">
-                <svg width="40" height="40" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
-            </div>
-            <div class="kos-body">
-                <span class="kos-type-badge badge-exclusive">Exclusive</span>
-                <div class="kos-name">Premium Stay Kos</div>
-                <div class="kos-loc"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Jl. Ijen Blvd No.1, Malang</div>
-                <div class="kos-price-row">
-                    <div class="kos-price">Rp 2Jt <span>/bulan</span></div>
-                    <div class="kos-rating">★ 4.9</div>
-                </div>
-            </div>
-        </div>
-    </div>
+        </a>
+    @empty
+        <p style="color: var(--text-light); font-size: 13px;">Belum ada kos yang tersedia saat ini.</p>
+    @endforelse
+</div>
 </section>
 
 <!-- ══════════════════ TESTIMONI ══════════════════ -->

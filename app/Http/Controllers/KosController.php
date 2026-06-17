@@ -9,7 +9,8 @@ class KosController extends Controller
 {
     public function index()
     {
-        return view('kos-listing');
+        $kosList = Kos::tersedia()->latest()->paginate(8);
+        return view('kos-listing', compact('kosList'));
     }
 
     public function show($id)
@@ -21,8 +22,15 @@ class KosController extends Controller
     public function search(Request $request)
     {
         $query = $request->get('q');
-        // nanti bisa difilter dari DB:
-        // $kos = Kos::where('nama', 'like', "%$query%")->paginate(8);
-        return view('kos-search', compact('query'));
+
+        $kosList = Kos::tersedia()
+            ->when($query, function ($q) use ($query) {
+                $q->where('nama', 'like', "%{$query}%")
+                  ->orWhere('alamat', 'like', "%{$query}%");
+            })
+            ->latest()
+            ->paginate(8);
+
+        return view('kos-search', compact('kosList', 'query'));
     }
 }

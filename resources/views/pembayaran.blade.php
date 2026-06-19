@@ -421,7 +421,7 @@
 
                     <div class="detail-bayar" id="detail-bca">
                         <div class="transfer-info">
-                            Nomor Rekening
+                            Virtual Account
                             <strong>1234 5678 9012</strong>
                             a.n. <strong>PT Rumantra Indonesia</strong>
                         </div>
@@ -452,7 +452,7 @@
 
                     <div class="detail-bayar" id="detail-mandiri">
                         <div class="transfer-info">
-                            Nomor Rekening
+                            Virtual Account
                             <strong>1400 0098 7654</strong>
                             a.n. <strong>PT Rumantra Indonesia</strong>
                         </div>
@@ -497,7 +497,7 @@
                 </div>
 
                 <button type="submit" class="btn-bayar" id="btn-bayar" disabled>
-                    Konfirmasi Pembayaran
+                    Cek Status Pembayaran
                 </button>
             </form>
         </div>

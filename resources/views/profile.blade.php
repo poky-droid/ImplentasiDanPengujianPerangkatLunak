@@ -333,8 +333,6 @@
                     <option value="">-- Pilih --</option>
                     <option value="Lajang" {{ Auth::user()->status == 'Lajang' ? 'selected' : '' }}>Lajang</option>
                     <option value="Menikah" {{ Auth::user()->status == 'Menikah' ? 'selected' : '' }}>Menikah</option>
-                    <option value="Duda" {{ Auth::user()->status == 'Duda' ? 'selected' : '' }}>Duda</option>
-                    <option value="Janda" {{ Auth::user()->status == 'Janda' ? 'selected' : '' }}>Janda</option>
                 </select>
             </div>
 

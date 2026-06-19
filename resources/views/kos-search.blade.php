@@ -41,111 +41,70 @@
 
         /* ─── FOOTER ─────────────────────────────────────── */
         footer {
-            background: #ffffff;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
-            padding: 64px 32px 32px;
-            font-family: 'DM Sans', sans-serif;
-            margin-top: auto;
+            background: var(--sage-deeper);
+            padding: 48px 64px 28px;
         }
         .footer-grid {
-            max-width: 1100px;
-            margin: 0 auto 40px;
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 40px;
-            align-items: start;
+            margin-bottom: 40px;
         }
-        .footer-logo-wrap {
-            display: flex;
-            align-items: center;
-        }
-        .footer-logo-circle {
-            width: 120px;
-            height: 120px;
+        .footer-brand-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 12px; }
+        .footer-brand-logo {
+            width: 44px; height: 44px;
             border-radius: 50%;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            border: 2px solid rgba(255,255,255,0.3);
+            background: var(--white);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; padding: 2px;
         }
-        .footer-logo-circle img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-        }
-        .footer-col-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 20px;
-            letter-spacing: -0.2px;
-        }
-        .footer-links {
-            list-style: none;
-        }
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-        .footer-links a {
-            font-size: 13px;
-            color: #4b5563;
-            text-decoration: none;
-            transition: color .2s;
-            font-weight: 400;
-        }
-        .footer-links a:hover {
-            color: var(--sage-deeper, #6B8F71);
-        }
-        .footer-social {
-            display: flex;
-            gap: 12px;
-        }
+        .footer-brand-logo img { width: 38px; height: 38px; object-fit: contain; }
+        .footer-brand-name { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: 1.5px; }
+        .footer-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.7; }
+        .footer-col-title { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color .2s; }
+        .footer-links a:hover { color: var(--gold-light); }
+        .footer-social { display: flex; gap: 12px; }
         .social-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 36px; height: 36px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            color: #4b5563;
-            transition: border-color .2s, color .2s, background-color .2s;
-            background: #ffffff;
+            transition: border-color .2s, background .2s;
         }
-        .social-btn:hover {
-            border-color: var(--sage-deeper, #6B8F71);
-            color: var(--sage-deeper, #6B8F71);
-            background-color: var(--sage-bg, #EDF3EE);
-        }
-        .social-btn svg {
-            fill: currentColor;
-            width: 14px;
-            height: 14px;
-        }
+        .social-btn:hover { border-color: var(--gold-light); background: rgba(201,168,76,0.1); }
         .footer-bottom {
-            max-width: 1100px;
-            margin: 0 auto;
-            border-top: 1px solid rgba(0,0,0,0.06);
-            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
             text-align: center;
             font-size: 11px;
-            color: #9ca3af;
-            font-weight: 400;
-            letter-spacing: 0.2px;
+            color: rgba(255,255,255,0.3);
         }
-        .footer-bottom a {
-            color: inherit;
-            text-decoration: none;
-            margin: 0 4px;
-        }
-        .footer-bottom a:hover {
-            color: #4b5563;
-        }
+        .footer-bottom a { color: rgba(255,255,255,0.4); text-decoration: none; }
+        .footer-bottom a:hover { color: rgba(255,255,255,0.6); }
 
+        /* ─── RESPONSIVE ─────────────────────────────────── */
+        @media (max-width: 1100px) { .kos-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 800px) {
+            .hero { padding: 48px 24px; }
+            .section, .testi-section { padding: 36px 24px; }
+            .explore { padding: 28px 24px; }
+            .kos-grid { grid-template-columns: repeat(2, 1fr); }
+            .testi-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            footer { padding: 36px 24px 20px; }
+            .navbar { padding: 0 16px; }
+            .search-form { display: none; }
+        }
+        @media (max-width: 500px) {
+            .kos-grid { grid-template-columns: 1fr; }
+            .explore-grid { gap: 24px; }
+        }
+        
         /* ─── NAVBAR ─────────────────────────────────────── */
         .navbar {
             background: var(--sage-bg);
@@ -733,51 +692,53 @@
 <!-- ══════════════════ FOOTER ══════════════════ -->
 <footer>
     <div class="footer-grid">
-        <div class="footer-logo-wrap">
-            <div class="footer-logo-circle">
-                <img src="{{ asset('images/logo.png') }}" alt="Rumantra">
-            </div>
+        <div>
+            <a href="/" class="footer-brand-wrap">
+                <div class="footer-brand-logo">
+                    <img src="{{ asset('images/logo.png') }}" alt="Rumantra">
+                </div>
+                <span class="footer-brand-name">RUMANTRA</span>
+            </a>
+            <p class="footer-desc">Platform terpercaya untuk menemukan kos impian mahasiswa di seluruh Indonesia. Aman, nyaman, dan terjangkau.</p>
         </div>
         <div>
             <div class="footer-col-title">Resource</div>
             <ul class="footer-links">
-                <li><a href="#">Help center</a></li>
-                <li><a href="#">Security</a></li>
-                <li><a href="#">Privacy policy</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Panduan</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Promo</a></li>
             </ul>
         </div>
         <div>
             <div class="footer-col-title">Company</div>
             <ul class="footer-links">
-                <li><a href="#">About us</a></li>
-                <li><a href="#">Contact us</a></li>
+                <li><a href="#">Tentang Kami</a></li>
+                <li><a href="#">Karier</a></li>
+                <li><a href="#">Mitra</a></li>
+                <li><a href="#">Kontak</a></li>
             </ul>
         </div>
         <div>
             <div class="footer-col-title">Social</div>
             <div class="footer-social">
                 <div class="social-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                    </svg>
+                    <svg width="16" height="16" fill="rgba(255,255,255,0.6)" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                 </div>
                 <div class="social-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                    </svg>
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.6)" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                 </div>
                 <div class="social-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                    </svg>
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.6)" stroke-width="1.8"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
                 </div>
             </div>
         </div>
     </div>
     <div class="footer-bottom">
-        &copy; 2026 Rumantra &nbsp;•&nbsp; Teman Mahasiswa Cari Kos &nbsp;•&nbsp; <a href="#">Kebijakan Privasi</a> &nbsp;•&nbsp; <a href="#">Syarat & Ketentuan</a>
+        &copy; 2025 Rumantra &nbsp;·&nbsp;
+        <a href="#">Syarat & Ketentuan</a> &nbsp;·&nbsp;
+        <a href="#">Kebijakan Privasi</a> &nbsp;·&nbsp;
+        <a href="#">Syarat & Kebijakan</a>
     </div>
 </footer>
 

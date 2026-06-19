@@ -27,6 +27,7 @@ use App\Http\Controllers\NotifikasiController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
 Route::get('/kos/search', [KosController::class, 'search'])->name('kos.search');
+Route::get('/kos/listing', [KosController::class, 'listing'])->name('kos.listing');
 Route::get('/kos/{id}', [KosController::class, 'show'])->name('kos.show');
 // allow owners to create kos via /kos/create (used in templates)
 Route::get('/kos/create', [OwnerKosController::class, 'create'])->name('kos.create')->middleware(['auth','owner']);

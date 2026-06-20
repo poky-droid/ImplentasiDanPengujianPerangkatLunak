@@ -6,6 +6,8 @@
     <title>Detail Kos - Kos Putri Melati</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -383,6 +385,21 @@
             .kos-name { font-size: 1.6rem; }
             .price-amount { font-size: 1.3rem; }
         }
+
+            /* ── MAP ── */
+        .map-wrap {
+            margin-bottom: 24px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+        .map-wrap p.section-label { padding: 0 0 10px; }
+            #map {
+            height: 260px;
+            width: 100%;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -456,7 +473,39 @@
                         </svg>
                         {{ $kos->alamat ?? 'Jl. Jatiwangun Purwokerto Selatan' }}
                     </div>
+                            {{-- MAP --}}
+                            <div class="map-wrap">
+                                <div id="map"></div>
+                            </div>
 
+                            {{-- Leaflet CSS & JS --}}
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    // Koordinat default Purwokerto — ganti dengan kolom lat/lng dari DB
+                                    var lat = {{ $kos->latitude ?? -7.4248 }};
+                                    var lng = {{ $kos->longitude ?? 109.2350 }};
+                                    var nama = "{{ $kos->nama ?? 'Lokasi Kos' }}";
+                                    var alamat = "{{ $kos->alamat ?? '' }}";
+
+                                    var map = L.map('map').setView([lat, lng], 15);
+
+                                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                        attribution: '© OpenStreetMap contributors'
+                                    }).addTo(map);
+
+                                    var icon = L.divIcon({
+                                        className: '',
+                                        html: '<div style="background:#2d3a2e;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3)"></div>',
+                                        iconSize: [14, 14],
+                                        iconAnchor: [7, 7],
+                                    });
+
+                                    L.marker([lat, lng], { icon: icon })
+                                        .addTo(map)
+                                        .bindPopup('<strong>' + nama + '</strong><br>' + alamat)
+                                        .openPopup();
+                                });
+                            </script>
                     <p class="section-label">Deskripsi</p>
                     <p class="description">
                         {{ $kos->deskripsi ?? 'Kos putri nyaman dan bersih berada di pusat kota.' }}

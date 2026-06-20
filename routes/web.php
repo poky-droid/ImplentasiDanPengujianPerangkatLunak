@@ -18,6 +18,8 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FavoritController;
 use App\Http\Controllers\Owner\KosController as OwnerKosController;
 use App\Http\Controllers\Owner\NotificationController as OwnerNotificationController;
+use App\Http\Controllers\Owner\BookingController as OwnerBookingController;
+use App\Http\Controllers\Owner\PembayaranController as OwnerPembayaranController;
 use App\Http\Controllers\NotifikasiController;
 
 /*
@@ -29,9 +31,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
 Route::get('/kos/search', [KosController::class, 'search'])->name('kos.search');
 Route::get('/kos/listing', [KosController::class, 'listing'])->name('kos.listing');
-Route::get('/kos/{id}', [KosController::class, 'show'])->name('kos.show');
-// allow owners to create kos via /kos/create (used in templates)
+// IMPORTANT: /kos/create must come BEFORE /kos/{id} to avoid wildcard conflict
 Route::get('/kos/create', [OwnerKosController::class, 'create'])->name('kos.create')->middleware(['auth','owner']);
+Route::get('/kos/{id}', [KosController::class, 'show'])->name('kos.show');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -93,6 +95,14 @@ Route::middleware('auth')->group(function () {
     // Owner-managed kos routes
     Route::prefix('owner')->name('owner.')->middleware(['auth','owner'])->group(function () {
         Route::resource('kos', OwnerKosController::class)->except(['show']);
+
+        // Booking owner
+        Route::get('/booking', [OwnerBookingController::class, 'index'])->name('booking.index');
+        Route::get('/booking/{id}', [OwnerBookingController::class, 'show'])->name('booking.show');
+        Route::patch('/booking/{id}/status', [OwnerBookingController::class, 'updateStatus'])->name('booking.updateStatus');
+
+        // Pembayaran owner
+        Route::get('/pembayaran', [OwnerPembayaranController::class, 'index'])->name('pembayaran.index');
 
         // Notifikasi Owner
         Route::get('/notifications', [OwnerNotificationController::class, 'index'])->name('notifications');

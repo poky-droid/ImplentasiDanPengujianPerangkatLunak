@@ -549,21 +549,64 @@
                     </div>
 
                     <div class="cta-group">
-                        {{-- Tombol Ajukan Sewa --}}
-                        <a href={{ route('booking.create', ['kos' => $kos->id]) }} class="btn btn-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:17px;height:17px;">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            Ajukan sewa
-                        </a>
+                        @auth
+                            @if(auth()->id() === $kos->owner_id)
+                                {{-- Owner melihat kos milik sendiri --}}
+                                <div style="
+                                    background: #FFF8E1;
+                                    border: 1.5px solid #FFE082;
+                                    border-radius: 14px;
+                                    padding: 16px 18px;
+                                    display: flex;
+                                    align-items: flex-start;
+                                    gap: 12px;
+                                ">
+                                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#F59E0B" stroke-width="2" style="flex-shrink:0;margin-top:1px;">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="12" y1="8" x2="12" y2="12"/>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                    </svg>
+                                    <div>
+                                        <div style="font-size:13px;font-weight:700;color:#92400E;margin-bottom:4px;">Ini kos milik Anda</div>
+                                        <div style="font-size:12px;color:#B45309;line-height:1.6;">Anda tidak dapat memesan atau menghubungi kos yang Anda kelola sendiri.</div>
+                                        <a href="{{ route('owner.kos.edit', $kos->id) }}" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;font-weight:600;color:#3A5540;text-decoration:none;background:#E8F5E9;padding:6px 14px;border-radius:8px;border:1px solid #A5D6A7;">
+                                            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                            Edit Kos Ini
+                                        </a>
+                                    </div>
+                                </div>
+                            @else
+                                {{-- Tombol Ajukan Sewa --}}
+                                <a href={{ route('booking.create', ['kos' => $kos->id]) }} class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:17px;height:17px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    Ajukan sewa
+                                </a>
 
-                        {{-- Tombol Hubungi Pemilik --}}
-                        <a href="{{ route('chat.index', $kos->id) }}" class="btn btn-outline">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:17px;height:17px;">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
-                            </svg>
-                            Hubungi Pemilik
-                        </a>
+                                {{-- Tombol Hubungi Pemilik --}}
+                                <a href="{{ route('chat.index', $kos->id) }}" class="btn btn-outline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:17px;height:17px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+                                    </svg>
+                                    Hubungi Pemilik
+                                </a>
+                            @endif
+                        @else
+                            {{-- Belum login --}}
+                            <a href="{{ route('login') }}" class="btn btn-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:17px;height:17px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/>
+                                </svg>
+                                Login untuk Menyewa
+                            </a>
+                            <a href="{{ route('chat.index', $kos->id) }}" class="btn btn-outline">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:17px;height:17px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+                                </svg>
+                                Hubungi Pemilik
+                            </a>
+                        @endauth
                     </div>
                 </div>
             </div><!-- /right-col -->

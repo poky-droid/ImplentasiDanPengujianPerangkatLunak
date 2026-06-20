@@ -500,7 +500,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="{{ route('kos.show', 1) }}">Lihat Detail</a>
+                <a href="{{ route('kos.show', 1) }}" class="btn btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -524,7 +524,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="{{ route('kos.show', 2) }}">Lihat Detail</a>
+                <a href="{{ route('kos.show', 2) }}" class="btn btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -548,7 +548,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="{{ route('kos.show', 3) }}">Lihat Detail</a>
+                <a href="{{ route('kos.show', 3) }}" class="btn btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -572,7 +572,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="{{ route('kos.show', 4) }}">Lihat Detail</a>
+                <a href="{{ route('kos.show', 4) }}" class="btn btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -596,7 +596,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="{{ route('kos.show', 5) }}">Lihat Detail</a>
+                <a href="{{ route('kos.show', 5) }}" class="btn btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -620,7 +620,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="{{ route('kos.show', 6) }}">Lihat Detail</a>
+                <a href="{{ route('kos.show', 6) }}" class="btn btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -644,7 +644,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="{{ route('kos.show', 7) }}">Lihat Detail</a>
+                <a href="{{ route('kos.show', 7) }}" class="btn btn-detail">Lihat Detail</a>
             </div>
         </div>
 
@@ -668,7 +668,7 @@
                     <span class="kos-tag">AC</span>
                     <span class="kos-tag">WiFi</span>
                 </div>
-                <a href="{{ route('kos.show', 8) }}">Lihat Detail</a>
+                <a href="{{ route('kos.show', 8) }}" class="btn btn-detail">Lihat Detail</a>
             </div>
         </div>
 

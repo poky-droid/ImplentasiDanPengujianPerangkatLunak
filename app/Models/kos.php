@@ -55,11 +55,9 @@ class Kos extends Model
     {
         $fotos = $this->foto;
         if (!empty($fotos) && is_array($fotos) && isset($fotos[0])) {
-            if (file_exists(storage_path('app/public/' . $fotos[0]))) {
-                return $fotos[0];
-            }
+            return $fotos[0]; // path relatif dari storage/app/public/
         }
-        return 'images/default_kos.png';
+        return null;
     }
 
     // ── Accessor: list of all images with fallback support ──
@@ -69,15 +67,13 @@ class Kos extends Model
         $images = [];
         if (!empty($fotos) && is_array($fotos)) {
             foreach ($fotos as $f) {
-                if (file_exists(storage_path('app/public/' . $f))) {
-                    $images[] = 'storage/' . $f;
-                }
+                $images[] = 'storage/' . $f;
             }
         }
 
-        // If no images exist, fill up with our default placeholder so that detail page gallery has enough images
+        // If no images exist, fill up with placeholder so gallery always has content
         while (count($images) < 3) {
-            $images[] = 'storage/images/default_kos.png';
+            $images[] = 'images/default_kos.png';
         }
 
         return $images;

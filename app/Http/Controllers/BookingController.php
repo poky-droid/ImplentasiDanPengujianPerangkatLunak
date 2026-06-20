@@ -13,6 +13,13 @@ class BookingController extends Controller
     public function create($id)
     {  
         $kos = Kos::findOrFail($id);
+
+        // Pemilik kos tidak boleh memesan kos miliknya sendiri
+        if (Auth::check() && Auth::id() === $kos->owner_id) {
+            return redirect()->route('kos.show', $kos->id)
+                ->with('error', 'Anda tidak dapat memesan kos yang Anda kelola sendiri.');
+        }
+
         return view('booking', compact('kos'));
     }
 
@@ -25,6 +32,14 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
+        $kos = Kos::findOrFail($request->kos_id);
+
+        // Pemilik kos tidak boleh memesan kos miliknya sendiri
+        if (Auth::id() === $kos->owner_id) {
+            return redirect()->route('kos.show', $kos->id)
+                ->with('error', 'Anda tidak dapat memesan kos yang Anda kelola sendiri.');
+        }
+
         $booking = Booking::create([
             'user_id'       => Auth::id(),
             'kos_id'        => $request->kos_id,

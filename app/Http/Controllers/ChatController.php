@@ -19,6 +19,12 @@ class ChatController extends Controller
         $kos      = Kos::findOrFail($kos_id);
         $receiver = User::findOrFail($kos->owner_id);  // pemilik kos
 
+        // Pemilik kos tidak boleh menghubungi kos miliknya sendiri
+        if (Auth::id() === $kos->owner_id) {
+            return redirect()->route('kos.show', $kos_id)
+                ->with('error', 'Anda tidak dapat menghubungi kos yang Anda kelola sendiri.');
+        }
+
         // Ambil semua pesan antara user login ↔ pemilik kos ini
         $messages = Chat::where('kos_id', $kos_id)
             ->where(function ($q) use ($receiver) {
@@ -40,7 +46,7 @@ class ChatController extends Controller
                ->where('dibaca',      false)
                ->update(['dibaca' => true]);
 
-        // Daftar konversasi (sidebar kiri) — semua owner kos yang pernah dihubungi
+        // Daftar konversasi (sidebar kiri)
         $conversations = Chat::where('sender_id', Auth::id())
             ->orWhere('receiver_id', Auth::id())
             ->with(['kos', 'sender', 'receiver'])
@@ -61,6 +67,13 @@ class ChatController extends Controller
             'receiver_id' => 'required|exists:users,id',
             'pesan'       => 'required|string|max:2000',
         ]);
+
+        // Pemilik kos tidak boleh mengirim pesan ke kos miliknya sendiri
+        $kos = Kos::findOrFail($request->kos_id);
+        if (Auth::id() === $kos->owner_id) {
+            return redirect()->route('kos.show', $request->kos_id)
+                ->with('error', 'Anda tidak dapat menghubungi kos yang Anda kelola sendiri.');
+        }
 
         Chat::create([
             'sender_id'   => Auth::id(),

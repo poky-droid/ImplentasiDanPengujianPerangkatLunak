@@ -637,122 +637,10 @@
 </head>
 <body>
 
-<!-- Sidebar overlay (mobile) -->
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
 <!-- ════════════════════════════════════════
      SIDEBAR
 ════════════════════════════════════════ -->
-<aside class="sidebar" id="sidebar">
-
-    <!-- Brand -->
-    <div class="sidebar-header">
-        <div class="sidebar-logo">
-            <img src="{{ asset('images/logo.png') }}" alt="Rumantra">
-        </div>
-        <a href="{{ route('owner.dashboard') }}" class="sidebar-brand">Rumantra</a>
-    </div>
-
-    <!-- User info -->
-    <div class="sidebar-user">
-        <div class="sidebar-avatar">
-            @if(auth()->user()->avatar)
-                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
-            @else
-                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-            @endif
-        </div>
-        <div class="sidebar-user-info">
-            <div class="sidebar-user-name">{{ auth()->user()->name }}</div>
-            <div class="sidebar-user-role">🏠 Pemilik Kos</div>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="sidebar-nav">
-        <div class="nav-section-label">Utama</div>
-
-        <a href="{{ route('owner.dashboard') }}" class="nav-item active" id="nav-dashboard">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7" rx="1"/>
-                <rect x="14" y="3" width="7" height="7" rx="1"/>
-                <rect x="3" y="14" width="7" height="7" rx="1"/>
-                <rect x="14" y="14" width="7" height="7" rx="1"/>
-            </svg>
-            Dashboard
-        </a>
-
-        <a href="{{ route('owner.kos.index') }}" class="nav-item" id="nav-kos">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
-                <path d="M9 21V12h6v9"/>
-            </svg>
-            Kelola Kos
-            @if(isset($kosList) && $kosList->count() > 0)
-                <span class="nav-badge">{{ $kosList->count() }}</span>
-            @endif
-        </a>
-
-        <div class="nav-section-label" style="margin-top:12px;">Manajemen</div>
-
-        <a href="{{ route('booking.create', ['kos' => 1]) }}" class="nav-item" id="nav-booking" onclick="return false;" style="pointer-events:none; opacity:.5;">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2"/>
-                <path d="M16 2v4M8 2v4M3 10h18"/>
-            </svg>
-            Booking
-        </a>
-
-        <a href="#" class="nav-item" id="nav-pembayaran">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <rect x="1" y="4" width="22" height="16" rx="2"/>
-                <path d="M1 10h22"/>
-            </svg>
-            Pembayaran
-        </a>
-
-        <div class="nav-section-label" style="margin-top:12px;">Komunikasi</div>
-
-        <a href="{{ route('owner.notifications') }}" class="nav-item" id="nav-notif">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-            </svg>
-            Notifikasi
-            @php
-                $navUnreadCount = \App\Models\OwnerNotification::forOwner(auth()->id())->unread()->count();
-            @endphp
-            @if($navUnreadCount > 0)
-                <span class="nav-badge">{{ $navUnreadCount }}</span>
-            @endif
-        </a>
-
-        <div class="nav-section-label" style="margin-top:12px;">Akun</div>
-
-        <a href="{{ route('profile.index') }}" class="nav-item" id="nav-profile">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-            </svg>
-            Profil Saya
-        </a>
-    </nav>
-
-    <!-- Logout -->
-    <div class="sidebar-footer">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="btn-logout">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
-                Keluar
-            </button>
-        </form>
-    </div>
-</aside>
+@include('owner.partials.sidebar')
 
 <!-- ════════════════════════════════════════
      MAIN CONTENT
@@ -800,7 +688,7 @@
                 @endif
             </a>
 
-            <a href="{{ route('kos.create') }}" class="btn-add-kos">
+            <a href="{{ route('owner.kos.create') }}" class="btn-add-kos">
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <line x1="12" y1="5" x2="12" y2="19"/>
                     <line x1="5" y1="12" x2="19" y2="12"/>
@@ -1022,7 +910,7 @@
                         <path d="M9 21V12h6v9"/>
                     </svg>
                     <p>Anda belum menambahkan kos. Mulai tambahkan kos pertama Anda!</p>
-                    <a href="{{ route('kos.create') }}">
+                    <a href="{{ route('owner.kos.create') }}">
                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <line x1="12" y1="5" x2="12" y2="19"/>
                             <line x1="5" y1="12" x2="19" y2="12"/>
@@ -1042,7 +930,7 @@
                         <span class="section-head-title">⚡ Akses Cepat</span>
                     </div>
                     <div class="quick-links">
-                        <a href="{{ route('kos.create') }}" class="quick-link">
+                        <a href="{{ route('owner.kos.create') }}" class="quick-link">
                             <div class="quick-link-icon">
                                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#3A5540" stroke-width="2">
                                     <line x1="12" y1="5" x2="12" y2="19"/>

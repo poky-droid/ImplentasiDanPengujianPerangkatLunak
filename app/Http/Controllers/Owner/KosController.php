@@ -114,40 +114,52 @@ class KosController extends Controller
         }
 
         $data = $request->validate([
-            'nama' => 'required|string|max:255',
-            'alamat' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'harga' => 'required|integer|min:0',
-            'tipe' => 'required|string|in:campur,putri,putra',
-            'luas_kamar' => 'nullable|string|max:50',
-            'kamar_mandi' => 'required|string|in:dalam,luar',
-            'fasilitas' => 'nullable|array',
+            'nama'           => 'required|string|max:255',
+            'alamat'         => 'required|string|max:255',
+            'deskripsi'      => 'nullable|string',
+            'harga'          => 'required|integer|min:0',
+            'tipe'           => 'required|string|in:campur,putri,putra',
+            'luas_kamar'     => 'nullable|string|max:50',
+            'kamar_mandi'    => 'required|string|in:dalam,luar',
+            'fasilitas'      => 'nullable|array',
             'kamar_tersedia' => 'required|integer|min:0',
-            'is_eksklusif' => 'nullable',
-            'status' => 'required|string|in:aktif,nonaktif',
-            'foto' => 'nullable|array',
-            'foto.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'is_eksklusif'   => 'nullable',
+            'status'         => 'required|string|in:aktif,nonaktif',
+            'foto_baru'      => 'nullable|array',
+            'foto_baru.*'    => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'foto_hapus'     => 'nullable|array',
         ]);
 
-        $data['is_eksklusif'] = $request->has('is_eksklusif') || $request->get('is_eksklusif') == '1';
+        $data['is_eksklusif'] = $request->has('is_eksklusif');
+        $data['fasilitas']    = $data['fasilitas'] ?? [];
 
-        // Keep old facilities if not specified
-        if (!isset($data['fasilitas'])) {
-            $data['fasilitas'] = [];
-        }
+        // 1. Mulai dari foto yang sudah ada
+        $existingFotos = $kos->foto ?? [];
 
-        if ($request->hasFile('foto')) {
-            $fotoPaths = [];
-            foreach ($request->file('foto') as $file) {
-                $path = $file->store('kos', 'public');
-                $fotoPaths[] = $path;
+        // 2. Hapus foto yang dipilih user untuk dihapus
+        $toRemove = $request->input('foto_hapus', []);
+        if (!empty($toRemove)) {
+            foreach ($toRemove as $path) {
+                \Storage::disk('public')->delete($path);
             }
-            $data['foto'] = $fotoPaths;
+            $existingFotos = array_values(array_diff($existingFotos, $toRemove));
         }
+
+        // 3. Tambahkan foto baru jika ada
+        if ($request->hasFile('foto_baru')) {
+            foreach ($request->file('foto_baru') as $file) {
+                $existingFotos[] = $file->store('kos', 'public');
+            }
+        }
+
+        $data['foto'] = $existingFotos;
+
+        // Hapus key yang tidak ada di fillable
+        unset($data['foto_baru'], $data['foto_hapus']);
 
         $kos->update($data);
 
-        return redirect()->route('owner.kos.index')->with('success', 'Kos diperbarui');
+        return redirect()->route('owner.kos.index')->with('success', 'Kos berhasil diperbarui.');
     }
 
     public function destroy($id)

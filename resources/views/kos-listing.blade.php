@@ -252,173 +252,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* ─── NOTIFICATION PANEL ─────────────────────────── */
-        .bell-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .bell-badge {
-            position: absolute;
-            top: -4px;
-            right: -5px;
-            width: 16px;
-            height: 16px;
-            background: #ef4444;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            font-size: 9px;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-        }
-        .notif-panel {
-            position: absolute;
-            top: calc(100% + 18px);
-            right: -12px;
-            width: 370px;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 12px 48px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.06);
-            border: 1px solid rgba(107,143,113,0.12);
-            z-index: 999;
-            opacity: 0;
-            transform: translateY(-8px) scale(0.97);
-            pointer-events: none;
-            transition: opacity 0.22s ease, transform 0.22s ease;
-            max-height: 520px;
-            display: flex;
-            flex-direction: column;
-        }
-        .notif-panel.open {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: all;
-        }
-        .notif-panel::before {
-            content: '';
-            position: absolute;
-            top: -7px;
-            right: 20px;
-            width: 13px;
-            height: 13px;
-            background: #fff;
-            border-left: 1px solid rgba(107,143,113,0.12);
-            border-top: 1px solid rgba(107,143,113,0.12);
-            transform: rotate(45deg);
-            border-radius: 2px 0 0 0;
-        }
-        .notif-header {
-            padding: 18px 20px 14px;
-            border-bottom: 1px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-shrink: 0;
-        }
-        .notif-header-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1a1a1a;
-            font-family: 'DM Sans', sans-serif;
-        }
-        .notif-mark-all {
-            font-size: 12px;
-            color: #6b8f71;
-            font-weight: 600;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-family: 'DM Sans', sans-serif;
-            padding: 0;
-        }
-        .notif-mark-all:hover { color: #4a6b50; text-decoration: underline; }
-        .notif-list {
-            overflow-y: auto;
-            flex: 1;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(107,143,113,0.25) transparent;
-        }
-        .notif-list::-webkit-scrollbar { width: 4px; }
-        .notif-list::-webkit-scrollbar-thumb { background: rgba(107,143,113,0.3); border-radius: 4px; }
-        .notif-date-sep {
-            text-align: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: #aaa;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'DM Sans', sans-serif;
-        }
-        .notif-date-sep::before, .notif-date-sep::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #f0f0f0;
-        }
-        .notif-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 13px;
-            padding: 13px 20px;
-            transition: background 0.15s;
-            cursor: pointer;
-            border-bottom: 1px solid #fafafa;
-        }
-        .notif-item:hover { background: #f8faf8; }
-        .notif-item:last-child { border-bottom: none; }
-        .notif-dot {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 2px;
-        }
-        .notif-dot.green  { background: #d1fae5; }
-        .notif-dot.blue   { background: #dbeafe; }
-        .notif-dot.red    { background: #fee2e2; }
-        .notif-dot.yellow { background: #fef9c3; }
-        .notif-dot-inner {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        .notif-dot.green  .notif-dot-inner { background: #10b981; }
-        .notif-dot.blue   .notif-dot-inner { background: #3b82f6; }
-        .notif-dot.red    .notif-dot-inner { background: #ef4444; }
-        .notif-dot.yellow .notif-dot-inner { background: #f59e0b; }
-        .notif-content { flex: 1; min-width: 0; }
-        .notif-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 3px;
-            font-family: 'DM Sans', sans-serif;
-            line-height: 1.3;
-        }
-        .notif-desc {
-            font-size: 12px;
-            color: #6b7280;
-            margin-bottom: 4px;
-            font-family: 'DM Sans', sans-serif;
-            line-height: 1.4;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .notif-time {
-            font-size: 11px;
-            color: #aab4be;
-            font-family: 'DM Sans', sans-serif;
-        }
 
         /* ─── MAIN CONTENT ───────────────────────────────── */
         .main {
@@ -646,12 +479,7 @@
     </form>
 
     <div class="navbar-right">
-        <div class="nav-icon">
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-            </svg>
-        </div>
+        {{-- Bell icon removed: notifikasi hanya tersedia di halaman Owner --}}
         <div class="nav-icon">
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -863,21 +691,6 @@
 <div class="fav-toast" id="favToast"></div>
 
 <script>
-    // ── NOTIFICATION PANEL ──────────────────────────────
-    function toggleNotif(e) {
-        e.stopPropagation();
-        document.getElementById('notifPanel').classList.toggle('open');
-    }
-    document.addEventListener('click', function(e) {
-        const wrapper = document.getElementById('bellWrapper');
-        const panel   = document.getElementById('notifPanel');
-        if (wrapper && !wrapper.contains(e.target)) panel.classList.remove('open');
-    });
-    function markAllRead() {
-        const badge = document.getElementById('bellBadge');
-        if (badge) badge.style.display = 'none';
-    }
-
     // ── FAVORIT TOGGLE ──────────────────────────────────
     const isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
     const csrfToken  = '{{ csrf_token() }}';

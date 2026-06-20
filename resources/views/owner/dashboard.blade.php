@@ -713,12 +713,18 @@
 
         <div class="nav-section-label" style="margin-top:12px;">Komunikasi</div>
 
-        <a href="{{ route('notifikasi.index') }}" class="nav-item" id="nav-notif">
+        <a href="{{ route('owner.notifications') }}" class="nav-item" id="nav-notif">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
             Notifikasi
+            @php
+                $navUnreadCount = \App\Models\OwnerNotification::forOwner(auth()->id())->unread()->count();
+            @endphp
+            @if($navUnreadCount > 0)
+                <span class="nav-badge">{{ $navUnreadCount }}</span>
+            @endif
         </a>
 
         <div class="nav-section-label" style="margin-top:12px;">Akun</div>
@@ -781,12 +787,17 @@
                 {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM Y') }}
             </span>
 
-            <a href="{{ route('notifikasi.index') }}" class="topbar-icon-btn" title="Notifikasi">
+            <a href="{{ route('owner.notifications') }}" class="topbar-icon-btn" title="Notifikasi">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                 </svg>
-                <span class="notif-dot"></span>
+                @php
+                    $topbarUnread = \App\Models\OwnerNotification::forOwner(auth()->id())->unread()->count();
+                @endphp
+                @if($topbarUnread > 0)
+                    <span class="notif-dot" style="background:var(--danger);width:10px;height:10px;top:4px;right:4px;"></span>
+                @endif
             </a>
 
             <a href="{{ route('kos.create') }}" class="btn-add-kos">

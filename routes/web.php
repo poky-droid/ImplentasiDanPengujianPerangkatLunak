@@ -17,6 +17,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FavoritController;
 use App\Http\Controllers\Owner\KosController as OwnerKosController;
+use App\Http\Controllers\Owner\NotificationController as OwnerNotificationController;
 use App\Http\Controllers\NotifikasiController;
 
 /*
@@ -92,6 +93,11 @@ Route::middleware('auth')->group(function () {
     // Owner-managed kos routes
     Route::prefix('owner')->name('owner.')->middleware(['auth','owner'])->group(function () {
         Route::resource('kos', OwnerKosController::class)->except(['show']);
+
+        // Notifikasi Owner
+        Route::get('/notifications', [OwnerNotificationController::class, 'index'])->name('notifications');
+        Route::post('/notifications/{id}/read', [OwnerNotificationController::class, 'markRead'])->name('notifications.read');
+        Route::post('/notifications/read-all', [OwnerNotificationController::class, 'markAllRead'])->name('notifications.readAll');
     });
     Route::resource('notifikasi', NotifikasiController::class);
     Route::resource('chat', ChatController::class);

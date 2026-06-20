@@ -26,6 +26,7 @@ class Kos extends Model
         'kamar_tersedia',
         'rating',
         'is_eksklusif',
+        'status',         // 'aktif' | 'nonaktif'
     ];
 
     protected $casts = [
@@ -53,7 +54,33 @@ class Kos extends Model
     public function getFotoUtamaAttribute(): ?string
     {
         $fotos = $this->foto;
-        return (!empty($fotos) && is_array($fotos)) ? $fotos[0] : null;
+        if (!empty($fotos) && is_array($fotos) && isset($fotos[0])) {
+            if (file_exists(storage_path('app/public/' . $fotos[0]))) {
+                return $fotos[0];
+            }
+        }
+        return 'images/default_kos.png';
+    }
+
+    // ── Accessor: list of all images with fallback support ──
+    public function getImagesAttribute(): array
+    {
+        $fotos = $this->foto;
+        $images = [];
+        if (!empty($fotos) && is_array($fotos)) {
+            foreach ($fotos as $f) {
+                if (file_exists(storage_path('app/public/' . $f))) {
+                    $images[] = 'storage/' . $f;
+                }
+            }
+        }
+
+        // If no images exist, fill up with our default placeholder so that detail page gallery has enough images
+        while (count($images) < 3) {
+            $images[] = 'storage/images/default_kos.png';
+        }
+
+        return $images;
     }
 
     // ── Accessor: format harga rupiah ───────────────────

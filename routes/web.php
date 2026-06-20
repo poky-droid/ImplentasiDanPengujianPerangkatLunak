@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/booking/{kos}', [BookingController::class, 'create'])->name('booking.create');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+    Route::get('/riwayat-transaksi', [BookingController::class, 'history'])->name('booking.history');
+    Route::post('/booking/{id}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
     Route::get('/pembayaran/{booking}', [PembayaranController::class, 'create'])->name('pembayaran.create');
     Route::post('/pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
     Route::get('/chat/{kos_id}', [ChatController::class, 'index'])->name('chat.index');
@@ -105,11 +107,18 @@ Route::middleware('auth')->group(function () {
 
         // Pembayaran owner
         Route::get('/pembayaran', [OwnerPembayaranController::class, 'index'])->name('pembayaran.index');
+        Route::post('/pembayaran/{id}/konfirmasi', [OwnerPembayaranController::class, 'konfirmasiLunas'])->name('pembayaran.konfirmasi');
+        Route::post('/pembayaran/{id}/tolak', [OwnerPembayaranController::class, 'tolakPembayaran'])->name('pembayaran.tolak');
 
         // Notifikasi Owner
         Route::get('/notifications', [OwnerNotificationController::class, 'index'])->name('notifications');
-        Route::post('/notifications/{id}/read', [OwnerNotificationController::class, 'markRead'])->name('notifications.read');
         Route::post('/notifications/read-all', [OwnerNotificationController::class, 'markAllRead'])->name('notifications.readAll');
+        Route::post('/notifications/{id}/read', [OwnerNotificationController::class, 'markRead'])->name('notifications.read');
+
+        // Owner Chat (Pesan)
+        Route::get('/messages', [ChatController::class, 'ownerInbox'])->name('messages.inbox');
+        Route::get('/messages/{kos_id}/{user_id}', [ChatController::class, 'ownerChat'])->name('messages.show');
+        Route::post('/messages/send', [ChatController::class, 'ownerSend'])->name('messages.send');
     });
     Route::resource('notifikasi', NotifikasiController::class);
     Route::resource('chat', ChatController::class);

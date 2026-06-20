@@ -279,18 +279,47 @@
             .btn-bayar:hover { background: var(--sage-dark); transform: translateY(-1px); }
             .btn-bayar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-            /* ─── RESPONSIVE ─── */
+             /* ─── RESPONSIVE ─── */
             @media (max-width: 640px) {
                 .main { grid-template-columns: 1fr; }
                 body { padding: 16px; }
                 .step-line { width: 40px; }
             }
+
+            /* ─── MODAL OVERLAY ─── */
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-overlay.show {
+                display: flex;
+            }
+            @keyframes scaleUp {
+                from { transform: scale(0.9); opacity: 0; }
+                to { transform: scale(1); opacity: 1; }
+            }
         </style>
     </head>
     <body>
 
+    <!-- Modal Sukses Pembayaran Tunai -->
+    <div id="modal-success" class="modal-overlay">
+        <div style="background: #fff; border-radius: 16px; padding: 32px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.15); animation: scaleUp 0.3s ease;">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: #EDF3EE; color: #3A5540; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; font-weight: bold;">
+                ✓
+            </div>
+            <h3 style="font-size: 19px; font-weight: 700; color: #1E2D22; margin-bottom: 8px;">Berhasil Melakukan Pembayaran</h3>
+            <p style="font-size: 13.5px; color: #4A5C4D; line-height: 1.5; margin-bottom: 0;">Pengajuan pembayaran tunai Anda telah berhasil dikirim. Menunggu konfirmasi pemilik kos.</p>
+        </div>
+    </div>
+
     <!-- BACK -->
-    <a href="javascript:history.back()" class="back-btn">
+    <a href="/" class="back-btn">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
@@ -318,189 +347,276 @@
     <!-- MAIN -->
     <div class="main">
 
-        <!-- KIRI: Metode Pembayaran -->
-        <div class="card">
-            <div class="card-title">Pilih Metode Pembayaran</div>
-
-            <form method="POST" action="{{ route('pembayaran.store') }}" enctype="multipart/form-data" id="form-bayar">
-                @csrf
-                <input type="hidden" name="booking_id" value="{{ $booking->id ?? '' }}">
-                <input type="hidden" name="metode" id="input-metode">
-
-                <!-- QRIS -->
-                <div class="metode-group">
-                    <div class="metode-group-title">Dompet Digital</div>
-
-                    <div class="metode-item" onclick="pilihMetode(this, 'qris')">
-                        <div class="metode-icon icon-qris">
-                            <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-                                <rect x="4" y="4" width="14" height="14" rx="2" stroke="#3A5540" stroke-width="2"/>
-                                <rect x="7" y="7" width="8" height="8" rx="1" fill="#3A5540"/>
-                                <rect x="22" y="4" width="14" height="14" rx="2" stroke="#3A5540" stroke-width="2"/>
-                                <rect x="25" y="7" width="8" height="8" rx="1" fill="#3A5540"/>
-                                <rect x="4" y="22" width="14" height="14" rx="2" stroke="#3A5540" stroke-width="2"/>
-                                <rect x="7" y="25" width="8" height="8" rx="1" fill="#3A5540"/>
-                                <rect x="22" y="22" width="4" height="4" fill="#3A5540"/>
-                                <rect x="28" y="22" width="4" height="4" fill="#3A5540"/>
-                                <rect x="34" y="22" width="2" height="4" fill="#3A5540"/>
-                                <rect x="22" y="28" width="4" height="4" fill="#3A5540"/>
-                                <rect x="28" y="28" width="8" height="8" fill="#3A5540"/>
-                            </svg>
-                        </div>
-                        <div class="metode-info">
-                            <div class="metode-name">QRIS</div>
-                            <div class="metode-desc">Bayar dengan semua e-wallet & mobile banking</div>
-                        </div>
-                        <div class="metode-radio"><div class="metode-radio-dot"></div></div>
+        <!-- KIRI: Metode Pembayaran / Status Pembayaran -->
+        @if((isset($pembayaran) && $pembayaran) || (isset($booking) && $booking->status === 'cancelled'))
+            <div class="card">
+                <div class="card-title" style="margin-bottom: 20px;">Status Pembayaran</div>
+                
+                <div style="background: #fafcfa; border-radius: 12px; padding: 20px; border: 1.5px solid var(--border); display: flex; flex-direction: column; gap: 16px;">
+                    <div style="display: grid; grid-template-columns: 140px 1fr; gap: 12px 8px; font-size: 13px;">
+                        <span style="color: var(--text-light); font-weight: 500;">Metode Pembayaran</span>
+                        <span style="color: var(--text-dark); font-weight: 600;">
+                            @if(isset($pembayaran) && $pembayaran)
+                                {{ $pembayaran->metode_pembayaran === 'tunai' ? 'Tunai (Cash)' : ucfirst($pembayaran->metode_pembayaran) }}
+                            @else
+                                Tunai (Cash)
+                            @endif
+                        </span>
+                        
+                        <span style="color: var(--text-light); font-weight: 500;">Tanggal Pembayaran</span>
+                        <span style="color: var(--text-dark); font-weight: 600;">
+                            @if(isset($pembayaran) && $pembayaran->tanggal_pembayaran)
+                                {{ $pembayaran->tanggal_pembayaran->format('d M Y, H:i') }}
+                            @else
+                                {{ $booking->updated_at->format('d M Y, H:i') }}
+                            @endif
+                        </span>
+                        
+                        <span style="color: var(--text-light); font-weight: 500;">Status</span>
+                        <span>
+                            @if(isset($pembayaran) && $pembayaran->status_pembayaran === 'lunas')
+                                <span style="background: #E8F5E9; color: #2E7D32; font-weight: 700; padding: 4px 10px; border-radius: 20px; font-size: 11px;">Sudah Lunas</span>
+                            @elseif($booking->status === 'cancelled' || (isset($pembayaran) && $pembayaran->status_pembayaran === 'ditolak'))
+                                <span style="background: #FFEBEE; color: #C62828; font-weight: 700; padding: 4px 10px; border-radius: 20px; font-size: 11px;">Dibatalkan / Ditolak</span>
+                            @else
+                                <span style="background: #FFF9E8; color: #C9A84C; font-weight: 700; padding: 4px 10px; border-radius: 20px; font-size: 11px;">Pending</span>
+                            @endif
+                        </span>
                     </div>
 
-                    <!-- Detail QRIS -->
-                    <div class="detail-bayar" id="detail-qris">
-                        <div class="qris-box">
-                            <div class="qris-img">
-                                {{-- Ganti src dengan QR code asli --}}
-                                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="100" height="100" fill="white"/>
-                                    <rect x="10" y="10" width="30" height="30" rx="3" fill="#3A5540"/>
-                                    <rect x="15" y="15" width="20" height="20" rx="2" fill="white"/>
-                                    <rect x="18" y="18" width="14" height="14" rx="1" fill="#3A5540"/>
-                                    <rect x="60" y="10" width="30" height="30" rx="3" fill="#3A5540"/>
-                                    <rect x="65" y="15" width="20" height="20" rx="2" fill="white"/>
-                                    <rect x="68" y="18" width="14" height="14" rx="1" fill="#3A5540"/>
-                                    <rect x="10" y="60" width="30" height="30" rx="3" fill="#3A5540"/>
-                                    <rect x="15" y="65" width="20" height="20" rx="2" fill="white"/>
-                                    <rect x="18" y="68" width="14" height="14" rx="1" fill="#3A5540"/>
-                                    <rect x="50" y="50" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="58" y="50" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="66" y="50" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="74" y="50" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="82" y="50" width="8" height="6" fill="#3A5540"/>
-                                    <rect x="50" y="58" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="66" y="58" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="50" y="66" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="58" y="66" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="74" y="66" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="50" y="74" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="66" y="74" width="6" height="6" fill="#3A5540"/>
-                                    <rect x="82" y="74" width="8" height="16" fill="#3A5540"/>
-                                    <rect x="58" y="82" width="6" height="8" fill="#3A5540"/>
-                                    <rect x="74" y="82" width="6" height="8" fill="#3A5540"/>
+                    <hr style="border: none; border-top: 1px solid var(--border); margin: 4px 0;">
+
+                    <div style="padding: 14px; border-radius: 10px; font-size: 13px; font-weight: 600; text-align: center; line-height: 1.5;
+                        @if($booking->status === 'cancelled' || (isset($pembayaran) && $pembayaran->status_pembayaran === 'ditolak'))
+                            background: #FFEBEE; color: #B71C1C; border: 1px solid #ffcdd2;
+                        @elseif(isset($pembayaran) && $pembayaran->status_pembayaran === 'lunas')
+                            background: #E8F5E9; color: #1B5E20; border: 1px solid #c8e6c9;
+                        @else
+                            background: #FFF9E8; color: #856404; border: 1px solid #ffeeba;
+                        @endif
+                    ">
+                        @if($booking->status === 'cancelled' || (isset($pembayaran) && $pembayaran->status_pembayaran === 'ditolak'))
+                            ✗ Pembayaran ditolak atau pesanan dibatalkan
+                        @elseif(isset($pembayaran) && $pembayaran->status_pembayaran === 'lunas')
+                            ✓ Sudah Lunas
+                        @else
+                            ⏳ Menunggu konfirmasi pemilik kos
+                        @endif
+                    </div>
+
+                    @if($booking->status !== 'cancelled' && (!isset($pembayaran) || $pembayaran->status_pembayaran === 'pending'))
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
+                            <a href="{{ route('chat.index', $booking->kos_id) }}" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--sage-deeper); color: #fff; text-decoration: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 600; text-align: center; transition: background 0.2s;" onmouseover="this.style.background='var(--sage-dark)'" onmouseout="this.style.background='var(--sage-deeper)'">
+                                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                Hubungi Pemilik
+                            </a>
+                            <form action="{{ route('booking.cancel', $booking->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')" style="margin: 0;">
+                                @csrf
+                                <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: #FFEBEE; color: #C62828; border: 1.5px solid #FFCDD2; border-radius: 10px; padding: 10.5px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#FFCDD2'" onmouseout="this.style.background='#FFEBEE'">
+                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                    Batalkan Pesanan
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <div style="margin-top: 16px;">
+                            <a href="{{ route('chat.index', $booking->kos_id) }}" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--sage-deeper); color: #fff; text-decoration: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 600; text-align: center; transition: background 0.2s;" onmouseover="this.style.background='var(--sage-dark)'" onmouseout="this.style.background='var(--sage-deeper)'">
+                                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                Hubungi Pemilik
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @else
+            <div class="card">
+                <div class="card-title">Pilih Metode Pembayaran</div>
+
+                <form method="POST" action="{{ route('pembayaran.store') }}" enctype="multipart/form-data" id="form-bayar">
+                    @csrf
+                    <input type="hidden" name="booking_id" value="{{ $booking->id ?? '' }}">
+                    <input type="hidden" name="metode" id="input-metode">
+
+                    <!-- QRIS -->
+                    <div class="metode-group">
+                        <div class="metode-group-title">Dompet Digital</div>
+
+                        <div class="metode-item" onclick="pilihMetode(this, 'qris')">
+                            <div class="metode-icon icon-qris">
+                                <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+                                    <rect x="4" y="4" width="14" height="14" rx="2" stroke="#3A5540" stroke-width="2"/>
+                                    <rect x="7" y="7" width="8" height="8" rx="1" fill="#3A5540"/>
+                                    <rect x="22" y="4" width="14" height="14" rx="2" stroke="#3A5540" stroke-width="2"/>
+                                    <rect x="25" y="7" width="8" height="8" rx="1" fill="#3A5540"/>
+                                    <rect x="4" y="22" width="14" height="14" rx="2" stroke="#3A5540" stroke-width="2"/>
+                                    <rect x="7" y="25" width="8" height="8" rx="1" fill="#3A5540"/>
+                                    <rect x="22" y="22" width="4" height="4" fill="#3A5540"/>
+                                    <rect x="28" y="22" width="4" height="4" fill="#3A5540"/>
+                                    <rect x="34" y="22" width="2" height="4" fill="#3A5540"/>
+                                    <rect x="22" y="28" width="4" height="4" fill="#3A5540"/>
+                                    <rect x="28" y="28" width="8" height="8" fill="#3A5540"/>
                                 </svg>
                             </div>
-                            <div class="qris-note">Scan QR Code menggunakan aplikasi e-wallet atau mobile banking kamu</div>
-                            <div style="font-size:12px; color:var(--text-light);">Berlaku 24 jam</div>
-                        </div>
-                        <div style="margin-top:14px;">
-                            <div class="upload-wrap" id="upload-wrap-qris" onclick="document.getElementById('bukti-qris').click()">
-                                <img class="upload-preview" id="preview-qris">
-                                <div class="upload-icon">📎</div>
-                                <div class="upload-label">Upload Bukti Pembayaran</div>
-                                <div class="upload-sub">JPG, PNG maksimal 2MB</div>
+                            <div class="metode-info">
+                                <div class="metode-name">QRIS</div>
+                                <div class="metode-desc">Bayar dengan semua e-wallet & mobile banking</div>
                             </div>
-                            <input type="file" name="bukti_qris" id="bukti-qris" class="upload-input" accept="image/*" onchange="previewFile(this, 'preview-qris', 'upload-wrap-qris')">
+                            <div class="metode-radio"><div class="metode-radio-dot"></div></div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Transfer Bank -->
-                <div class="metode-group">
-                    <div class="metode-group-title">Transfer Bank</div>
-
-                    <div class="metode-item" onclick="pilihMetode(this, 'bca')">
-                        <div class="metode-icon icon-transfer">
-                            <svg width="28" height="20" viewBox="0 0 60 20" fill="none">
-                                <text x="0" y="16" font-family="DM Sans" font-size="16" font-weight="700" fill="#1A4B9B">BCA</text>
-                            </svg>
-                        </div>
-                        <div class="metode-info">
-                            <div class="metode-name">Bank BCA</div>
-                            <div class="metode-desc">Transfer via ATM, m-Banking, atau teller</div>
-                        </div>
-                        <div class="metode-radio"><div class="metode-radio-dot"></div></div>
-                    </div>
-
-                    <div class="detail-bayar" id="detail-bca">
-                        <div class="transfer-info">
-                            Virtual Account
-                            <strong>1234 5678 9012</strong>
-                            a.n. <strong>PT Rumantra Indonesia</strong>
-                        </div>
-                        <button type="button" class="copy-btn" onclick="copyNorek('1234567890l2')">📋 Salin Nomor Rekening</button>
-                        <div style="margin-top:14px;">
-                            <div class="upload-wrap" id="upload-wrap-bca" onclick="document.getElementById('bukti-bca').click()">
-                                <img class="upload-preview" id="preview-bca">
-                                <div class="upload-icon">📎</div>
-                                <div class="upload-label">Upload Bukti Transfer</div>
-                                <div class="upload-sub">JPG, PNG maksimal 2MB</div>
+                        <!-- Detail QRIS -->
+                        <div class="detail-bayar" id="detail-qris">
+                            <div class="qris-box">
+                                <div class="qris-img">
+                                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="100" height="100" fill="white"/>
+                                        <rect x="10" y="10" width="30" height="30" rx="3" fill="#3A5540"/>
+                                        <rect x="15" y="15" width="20" height="20" rx="2" fill="white"/>
+                                        <rect x="18" y="18" width="14" height="14" rx="1" fill="#3A5540"/>
+                                        <rect x="60" y="10" width="30" height="30" rx="3" fill="#3A5540"/>
+                                        <rect x="65" y="15" width="20" height="20" rx="2" fill="white"/>
+                                        <rect x="68" y="18" width="14" height="14" rx="1" fill="#3A5540"/>
+                                        <rect x="10" y="60" width="30" height="30" rx="3" fill="#3A5540"/>
+                                        <rect x="15" y="65" width="20" height="20" rx="2" fill="white"/>
+                                        <rect x="18" y="68" width="14" height="14" rx="1" fill="#3A5540"/>
+                                        <rect x="50" y="50" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="58" y="50" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="66" y="50" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="74" y="50" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="82" y="50" width="8" height="6" fill="#3A5540"/>
+                                        <rect x="50" y="58" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="66" y="58" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="50" y="66" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="58" y="66" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="74" y="66" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="50" y="74" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="66" y="74" width="6" height="6" fill="#3A5540"/>
+                                        <rect x="82" y="74" width="8" height="16" fill="#3A5540"/>
+                                        <rect x="58" y="82" width="6" height="8" fill="#3A5540"/>
+                                        <rect x="74" y="82" width="6" height="8" fill="#3A5540"/>
+                                    </svg>
+                                </div>
+                                <div class="qris-note">Scan QR Code menggunakan aplikasi e-wallet atau mobile banking kamu</div>
+                                <div style="font-size:12px; color:var(--text-light);">Berlaku 24 jam</div>
                             </div>
-                            <input type="file" name="bukti_bca" id="bukti-bca" class="upload-input" accept="image/*" onchange="previewFile(this, 'preview-bca', 'upload-wrap-bca')">
-                        </div>
-                    </div>
-
-                    <div class="metode-item" onclick="pilihMetode(this, 'mandiri')">
-                        <div class="metode-icon icon-transfer">
-                            <svg width="28" height="20" viewBox="0 0 80 20" fill="none">
-                                <text x="0" y="16" font-family="DM Sans" font-size="13" font-weight="700" fill="#003087">Mandiri</text>
-                            </svg>
-                        </div>
-                        <div class="metode-info">
-                            <div class="metode-name">Bank Mandiri</div>
-                            <div class="metode-desc">Transfer via ATM, m-Banking, atau teller</div>
-                        </div>
-                        <div class="metode-radio"><div class="metode-radio-dot"></div></div>
-                    </div>
-
-                    <div class="detail-bayar" id="detail-mandiri">
-                        <div class="transfer-info">
-                            Virtual Account
-                            <strong>1400 0098 7654</strong>
-                            a.n. <strong>PT Rumantra Indonesia</strong>
-                        </div>
-                        <button type="button" class="copy-btn" onclick="copyNorek('1400009876554')">📋 Salin Nomor Rekening</button>
-                        <div style="margin-top:14px;">
-                            <div class="upload-wrap" id="upload-wrap-mandiri" onclick="document.getElementById('bukti-mandiri').click()">
-                                <img class="upload-preview" id="preview-mandiri">
-                                <div class="upload-icon">📎</div>
-                                <div class="upload-label">Upload Bukti Transfer</div>
-                                <div class="upload-sub">JPG, PNG maksimal 2MB</div>
+                            <div style="margin-top:14px;">
+                                <div class="upload-wrap" id="upload-wrap-qris" onclick="document.getElementById('bukti-qris').click()">
+                                    <img class="upload-preview" id="preview-qris">
+                                    <div class="upload-icon">📎</div>
+                                    <div class="upload-label">Upload Bukti Pembayaran</div>
+                                    <div class="upload-sub">JPG, PNG maksimal 2MB</div>
+                                </div>
+                                <input type="file" name="bukti_qris" id="bukti-qris" class="upload-input" accept="image/*" onchange="previewFile(this, 'preview-qris', 'upload-wrap-qris')">
                             </div>
-                            <input type="file" name="bukti_mandiri" id="bukti-mandiri" class="upload-input" accept="image/*" onchange="previewFile(this, 'preview-mandiri', 'upload-wrap-mandiri')">
                         </div>
                     </div>
-                </div>
 
-                <!-- Tunai -->
-                <div class="metode-group">
-                    <div class="metode-group-title">Tunai</div>
-                    <div class="metode-item" onclick="pilihMetode(this, 'cash')">
-                        <div class="metode-icon icon-cash">
-                            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#C9A84C" stroke-width="1.8">
-                                <rect x="2" y="6" width="20" height="12" rx="2"/>
-                                <circle cx="12" cy="12" r="3"/>
-                                <path d="M6 12h.01M18 12h.01"/>
-                            </svg>
+                    <!-- Transfer Bank -->
+                    <div class="metode-group">
+                        <div class="metode-group-title">Transfer Bank</div>
+
+                        <div class="metode-item" onclick="pilihMetode(this, 'bca')">
+                            <div class="metode-icon icon-transfer">
+                                <svg width="28" height="20" viewBox="0 0 60 20" fill="none">
+                                    <text x="0" y="16" font-family="DM Sans" font-size="16" font-weight="700" fill="#1A4B9B">BCA</text>
+                                </svg>
+                            </div>
+                            <div class="metode-info">
+                                <div class="metode-name">Bank BCA</div>
+                                <div class="metode-desc">Transfer via ATM, m-Banking, atau teller</div>
+                            </div>
+                            <div class="metode-radio"><div class="metode-radio-dot"></div></div>
                         </div>
-                        <div class="metode-info">
-                            <div class="metode-name">Bayar Tunai</div>
-                            <div class="metode-desc">Bayar langsung ke pemilik kos</div>
+
+                        <div class="detail-bayar" id="detail-bca">
+                            <div class="transfer-info">
+                                Virtual Account
+                                <strong>1234 5678 9012</strong>
+                                a.n. <strong>PT Rumantra Indonesia</strong>
+                            </div>
+                            <button type="button" class="copy-btn" onclick="copyNorek('1234567890l2')">📋 Salin Nomor Rekening</button>
+                            <div style="margin-top:14px;">
+                                <div class="upload-wrap" id="upload-wrap-bca" onclick="document.getElementById('bukti-bca').click()">
+                                    <img class="upload-preview" id="preview-bca">
+                                    <div class="upload-icon">📎</div>
+                                    <div class="upload-label">Upload Bukti Transfer</div>
+                                    <div class="upload-sub">JPG, PNG maksimal 2MB</div>
+                                </div>
+                                <input type="file" name="bukti_bca" id="bukti-bca" class="upload-input" accept="image/*" onchange="previewFile(this, 'preview-bca', 'upload-wrap-bca')">
+                            </div>
                         </div>
-                        <div class="metode-radio"><div class="metode-radio-dot"></div></div>
+
+                        <div class="metode-item" onclick="pilihMetode(this, 'mandiri')">
+                            <div class="metode-icon icon-transfer">
+                                <svg width="28" height="20" viewBox="0 0 80 20" fill="none">
+                                    <text x="0" y="16" font-family="DM Sans" font-size="13" font-weight="700" fill="#003087">Mandiri</text>
+                                </svg>
+                            </div>
+                            <div class="metode-info">
+                                <div class="metode-name">Bank Mandiri</div>
+                                <div class="metode-desc">Transfer via ATM, m-Banking, atau teller</div>
+                            </div>
+                            <div class="metode-radio"><div class="metode-radio-dot"></div></div>
+                        </div>
+
+                        <div class="detail-bayar" id="detail-mandiri">
+                            <div class="transfer-info">
+                                Virtual Account
+                                <strong>1400 0098 7654</strong>
+                                a.n. <strong>PT Rumantra Indonesia</strong>
+                            </div>
+                            <button type="button" class="copy-btn" onclick="copyNorek('1400009876554')">📋 Salin Nomor Rekening</button>
+                            <div style="margin-top:14px;">
+                                <div class="upload-wrap" id="upload-wrap-mandiri" onclick="document.getElementById('bukti-mandiri').click()">
+                                    <img class="upload-preview" id="preview-mandiri">
+                                    <div class="upload-icon">📎</div>
+                                    <div class="upload-label">Upload Bukti Transfer</div>
+                                    <div class="upload-sub">JPG, PNG maksimal 2MB</div>
+                                </div>
+                                <input type="file" name="bukti_mandiri" id="bukti-mandiri" class="upload-input" accept="image/*" onchange="previewFile(this, 'preview-mandiri', 'upload-wrap-mandiri')">
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="detail-bayar" id="detail-cash">
-                        <div class="cash-note">
-                            💡 Kamu bisa membayar langsung kepada pemilik kos saat check-in. Pastikan membawa uang tunai sesuai jumlah tagihan.
-                            <br><br>
-                            <strong>Catatan:</strong> Pembayaran tunai harus dikonfirmasi oleh pemilik kos.
+                    <!-- Tunai -->
+                    <div class="metode-group">
+                        <div class="metode-group-title">Tunai</div>
+                        <div class="metode-item" onclick="pilihMetode(this, 'cash')">
+                            <div class="metode-icon icon-cash">
+                                <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#C9A84C" stroke-width="1.8">
+                                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M6 12h.01M18 12h.01"/>
+                                </svg>
+                            </div>
+                            <div class="metode-info">
+                                <div class="metode-name">Bayar Tunai</div>
+                                <div class="metode-desc">Bayar langsung ke pemilik kos</div>
+                            </div>
+                            <div class="metode-radio"><div class="metode-radio-dot"></div></div>
+                        </div>
+
+                        <div class="detail-bayar" id="detail-cash">
+                            <div class="cash-note">
+                                💡 Kamu bisa membayar langsung kepada pemilik kos saat check-in. Pastikan membawa uang tunai sesuai jumlah tagihan.
+                                <br><br>
+                                <strong>Catatan:</strong> Pembayaran tunai harus dikonfirmasi oleh pemilik kos.
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <button type="submit" class="btn-bayar" id="btn-bayar" disabled>
-                    Cek Status Pembayaran
-                </button>
-            </form>
-        </div>
+                    <button type="submit" class="btn-bayar" id="btn-bayar" disabled>
+                        Cek Status Pembayaran
+                    </button>
+                </form>
+            </div>
+        @endif
 
         <!-- KANAN: Ringkasan -->
         <div>
@@ -594,6 +710,23 @@
                 wrap.classList.add('has-file');
             };
             reader.readAsDataURL(file);
+        }
+        const formBayar = document.getElementById('form-bayar');
+        if (formBayar) {
+            formBayar.addEventListener('submit', function(e) {
+                if (selectedMetode === 'cash') {
+                    e.preventDefault();
+                    
+                    const modal = document.getElementById('modal-success');
+                    if (modal) {
+                        modal.classList.add('show');
+                    }
+                    
+                    setTimeout(() => {
+                        this.submit();
+                    }, 1500);
+                }
+            });
         }
     </script>
 

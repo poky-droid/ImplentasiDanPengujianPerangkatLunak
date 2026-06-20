@@ -75,6 +75,16 @@ class BookingController extends Controller
 
         $booking->update(['status' => $request->status]);
 
+        // Sync payment status if payment exists
+        $pembayaran = \App\Models\Pembayaran::where('booking_id', $booking->id)->first();
+        if ($pembayaran) {
+            if ($request->status === 'confirmed' || $request->status === 'active' || $request->status === 'completed') {
+                $pembayaran->update(['status_pembayaran' => 'lunas']);
+            } elseif ($request->status === 'cancelled') {
+                $pembayaran->update(['status_pembayaran' => 'ditolak']);
+            }
+        }
+
         $labels = [
             'confirmed' => 'dikonfirmasi',
             'cancelled'  => 'dibatalkan',

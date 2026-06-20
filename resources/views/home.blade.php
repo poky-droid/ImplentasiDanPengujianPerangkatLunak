@@ -500,10 +500,12 @@
     </form>
 
     <div class="navbar-right">
-        <svg class="nav-icon" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-        </svg>
+        <div class="nav-icon" onclick="openNotificationModal()" title="Notifikasi" style="cursor: pointer; display: flex; align-items: center;">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+        </div>
         
         <a href="{{ route('favorit.index') }}" class="nav-icon" title="Favorit Saya" style="text-decoration:none;">
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
@@ -700,5 +702,151 @@
         <a href="#">Syarat & Kebijakan</a>
     </div>
 </footer>
+
+<!-- Modal Notifikasi Bell -->
+<div id="notification-modal" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    font-family: 'DM Sans', sans-serif;
+">
+    <div style="
+        background: #fff;
+        border-radius: 16px;
+        max-width: 480px;
+        width: 100%;
+        box-shadow: 0 10px 30px rgba(74, 107, 80, 0.2);
+        animation: scaleUp 0.3s ease;
+        overflow: hidden;
+        border: 1px solid #D8E4DA;
+    ">
+        <!-- Header -->
+        <div style="
+            background: #3A5540;
+            color: #fff;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        ">
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                🔔 Informasi & Notifikasi
+            </h3>
+            <button onclick="closeNotificationModal()" style="
+                background: none;
+                border: none;
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 20px;
+                cursor: pointer;
+                line-height: 1;
+                transition: color 0.2s;
+            " onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255, 255, 255, 0.8)'">&times;</button>
+        </div>
+        
+        <!-- Body -->
+        <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px; max-height: 400px; overflow-y: auto; text-align: left;">
+            <!-- Notif 1: Maintenance -->
+            <div style="
+                background: #FFF9E8;
+                border-left: 4px solid #C9A84C;
+                border-radius: 8px;
+                padding: 14px 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            ">
+                <div style="font-weight: 700; font-size: 13.5px; color: #856404; display: flex; align-items: center; gap: 6px;">
+                    🛠️ Pemeliharaan Sistem (Maintenance)
+                </div>
+                <div style="font-size: 12.5px; color: #664d03; line-height: 1.5;">
+                    Kami akan melakukan pemeliharaan sistem pada hari Minggu pukul 01:00 - 04:00 WIB. Layanan booking mungkin tidak dapat diakses sementara waktu.
+                </div>
+            </div>
+
+            <!-- Notif 2: Edit Profile -->
+            <div style="
+                background: #EDF3EE;
+                border-left: 4px solid #3A5540;
+                border-radius: 8px;
+                padding: 14px 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            ">
+                <div style="font-weight: 700; font-size: 13.5px; color: #1E2D22; display: flex; align-items: center; gap: 6px;">
+                    👤 Lengkapi Profil Akun Anda
+                </div>
+                <div style="font-size: 12.5px; color: #4A5C4D; line-height: 1.5;">
+                    Jangan lupa untuk melengkapi foto profil, nomor telepon, dan data diri Anda di menu <a href="/profile" style="color: #3A5540; font-weight: 700; text-decoration: underline;">Edit Profil</a> untuk kemudahan verifikasi sewa kos.
+                </div>
+            </div>
+
+            <!-- Notif 3: Sponsor -->
+            <div style="
+                background: #f0f4ff;
+                border-left: 4px solid #4a90e2;
+                border-radius: 8px;
+                padding: 14px 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            ">
+                <div style="font-weight: 700; font-size: 13.5px; color: #003087; display: flex; align-items: center; gap: 6px;">
+                    🎁 Sponsor Mitra Rumantra
+                </div>
+                <div style="font-size: 12.5px; color: #004085; line-height: 1.5;">
+                    Dapatkan potongan harga sewa kos khusus mahasiswa dengan menggunakan kode promo <strong>MHSBARU</strong> saat checkout transaksi pertama Anda!
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="
+            background: #FAFBFA;
+            padding: 16px 24px;
+            border-top: 1px solid #EDF3EE;
+            text-align: right;
+        ">
+            <button onclick="closeNotificationModal()" style="
+                background: #3A5540;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 20px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.2s;
+            " onmouseover="this.style.background='#4A6B50'" onmouseout="this.style.background='#3A5540'">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openNotificationModal() {
+        const modal = document.getElementById('notification-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+    function closeNotificationModal() {
+        const modal = document.getElementById('notification-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    // Close modal when clicking outside content area
+    window.addEventListener('click', function(e) {
+        const modal = document.getElementById('notification-modal');
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>

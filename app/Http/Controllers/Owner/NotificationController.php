@@ -11,20 +11,27 @@ class NotificationController extends Controller
 {
     /**
      * Tampilkan semua notifikasi milik owner yang sedang login.
+     * Support filter berdasarkan tipe via query param ?filter=booking|pembayaran|chat|maintenance|sistem
      */
-    public function index()
+    public function index(Request $request)
     {
         $ownerId = Auth::id();
+        $filter  = $request->get('filter'); // null = semua
 
-        $notifications = OwnerNotification::forOwner($ownerId)
-            ->orderByDesc('created_at')
-            ->get();
+        $query = OwnerNotification::forOwner($ownerId)->orderByDesc('created_at');
 
-        $unreadCount = OwnerNotification::forOwner($ownerId)
-            ->unread()
-            ->count();
+        if ($filter && in_array($filter, ['booking', 'pembayaran', 'chat', 'maintenance', 'review', 'sistem'])) {
+            $query->ofType($filter);
+        }
 
-        return view('owner.notifications', compact('notifications', 'unreadCount'));
+        $notifications = $query->get();
+
+        // Selalu hitung dari semua notifikasi (bukan yang terfilter)
+        $unreadCount = OwnerNotification::forOwner($ownerId)->unread()->count();
+        $totalCount  = OwnerNotification::forOwner($ownerId)->count();
+        $readCount   = $totalCount - $unreadCount;
+
+        return view('owner.notifications', compact('notifications', 'unreadCount', 'totalCount', 'readCount', 'filter'));
     }
 
     /**

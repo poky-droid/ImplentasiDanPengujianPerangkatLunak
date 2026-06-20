@@ -70,6 +70,16 @@
                 <line x1="2" y1="10" x2="22" y2="10"/>
             </svg>
             Pembayaran
+            @php
+                $pendingPaymentsCount = auth()->check() ? \App\Models\Pembayaran::where('status_pembayaran', 'pending')
+                    ->whereHas('kos', function($q) {
+                        $q->where('owner_id', auth()->id());
+                    })
+                    ->count() : 0;
+            @endphp
+            @if($pendingPaymentsCount > 0)
+                <span class="nav-badge" style="margin-left: auto; background: #C9A84C; color: #3A5540; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 10px;">{{ $pendingPaymentsCount }}</span>
+            @endif
         </a>
 
         <div class="nav-section-label" style="margin-top:12px;">Komunikasi</div>
@@ -85,6 +95,24 @@
             @endphp
             @if($navUnreadCount > 0)
                 <span class="nav-badge" style="margin-left: auto; background: #C9A84C; color: #3A5540; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 10px;">{{ $navUnreadCount }}</span>
+            @endif
+        </a>
+
+        <a href="{{ route('owner.messages.inbox') }}" class="nav-item {{ request()->routeIs('owner.messages.*') ? 'active' : '' }}">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            Pesan
+            @php
+                $navUnreadMessagesCount = auth()->check() ? \App\Models\Chat::where('receiver_id', auth()->id())
+                    ->whereHas('kos', function($q) {
+                        $q->where('owner_id', auth()->id());
+                    })
+                    ->where('dibaca', 0)
+                    ->count() : 0;
+            @endphp
+            @if($navUnreadMessagesCount > 0)
+                <span class="nav-badge" style="margin-left: auto; background: #C9A84C; color: #3A5540; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 10px;">{{ $navUnreadMessagesCount }}</span>
             @endif
         </a>
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Kamar;
 use App\Models\Booking;
 use App\Models\Kos;
+use App\Models\OwnerNotification;
 
 class BookingController extends Controller
 {
@@ -50,6 +51,60 @@ class BookingController extends Controller
             'status'        => 'pending',
         ]);
 
+        // ── Kirim notifikasi ke owner kos ──────────────────────
+        try {
+            $booking->load(['user', 'kos']);
+            OwnerNotification::createBookingNotif($kos->owner_id, $booking);
+        } catch (\Throwable $e) {
+            // Jangan gagalkan transaksi booking karena notifikasi gagal
+            \Log::warning('Gagal membuat notifikasi booking: ' . $e->getMessage());
+        }
+
         return redirect()->route('pembayaran.create', $booking->id);
+    }
+
+    /**
+     * Tampilkan riwayat transaksi/booking penyewa.
+     */
+    public function history()
+    {
+        $bookings = Booking::with(['kos', 'kamar'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        // Ambil info pembayaran untuk masing-masing booking
+        foreach ($bookings as $b) {
+            $b->pembayaran = \App\Models\Pembayaran::where('booking_id', $b->id)->first();
+        }
+
+        return view('booking_history', compact('bookings'));
+    }
+
+    /**
+     * Batalkan pesanan oleh penyewa.
+     */
+    public function cancel($id)
+    {
+        $booking = Booking::findOrFail($id);
+
+        if ($booking->user_id !== Auth::id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        // Update status booking ke cancelled
+        $booking->update([
+            'status' => 'cancelled'
+        ]);
+
+        // Batalkan pembayaran terkait jika ada
+        $pembayaran = \App\Models\Pembayaran::where('booking_id', $booking->id)->first();
+        if ($pembayaran) {
+            $pembayaran->update([
+                'status_pembayaran' => 'ditolak'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Pemesanan berhasil dibatalkan.');
     }
 }

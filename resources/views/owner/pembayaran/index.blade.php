@@ -55,7 +55,7 @@
         .sidebar-overlay.show { display: block; }
 
         /* ═══ MAIN ═══ */
-        .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+        .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; min-width: 0; }
         .topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 32px; height: 68px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
         .topbar-left { display: flex; align-items: center; gap: 16px; }
         .hamburger-btn { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--text-dark); }
@@ -69,7 +69,7 @@
         .page-heading p { font-size: 13px; color: var(--text-light); }
 
         /* ═══ STAT CARDS ═══ */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
         .stat-card { background: var(--white); border-radius: 12px; padding: 20px; box-shadow: var(--card-shadow); border: 1px solid var(--border); }
         .stat-card-title { font-size: 12px; font-weight: 600; color: var(--text-light); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-card-value { font-size: 26px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
@@ -140,8 +140,7 @@
         .pagination-wrap nav ul li a:hover { border-color: var(--sage-light); color: var(--sage-deeper); }
 
         /* Responsive */
-        @media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
             .main { margin-left: 0; }
@@ -149,7 +148,6 @@
             .page-body { padding: 24px 16px; }
             .topbar { padding: 0 16px; }
         }
-        @media (max-width: 600px) { .stats-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -173,6 +171,20 @@
     </header>
 
     <div class="page-body">
+
+        <!-- Flash Alert -->
+        @if(session('success'))
+            <div style="background: #E8F5E9; border: 1.5px solid #C8E6C9; color: #2E7D32; border-radius: 10px; padding: 14px 20px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; margin-bottom: 20px;" id="flashAlert">
+                <span>✓</span>
+                {{ session('success') }}
+            </div>
+            <script>
+                setTimeout(() => {
+                    const alert = document.getElementById('flashAlert');
+                    if (alert) alert.style.display = 'none';
+                }, 3000);
+            </script>
+        @endif
 
         <div class="page-heading">
             <div>
@@ -238,14 +250,16 @@
                 @endif
             </div>
 
-            {{-- Status tabs --}}
+            {{-- Status tabs ──}}
             <div class="status-tabs">
                 <a href="{{ route('owner.pembayaran.index', array_merge(request()->except('status'), [])) }}"
                    class="status-tab {{ !$status ? 'active' : '' }}">Semua Status</a>
                 <a href="{{ route('owner.pembayaran.index', array_merge(request()->except('status'), ['status'=>'pending'])) }}"
                    class="status-tab {{ $status=='pending' ? 'active' : '' }}">⏳ Pending</a>
-                <a href="{{ route('owner.pembayaran.index', array_merge(request()->except('status'), ['status'=>'confirmed'])) }}"
-                   class="status-tab {{ $status=='confirmed' ? 'active' : '' }}">✅ Lunas (Terkonfirmasi)</a>
+                <a href="{{ route('owner.pembayaran.index', array_merge(request()->except('status'), ['status'=>'lunas'])) }}"
+                   class="status-tab {{ $status=='lunas' ? 'active' : '' }}">✅ Lunas</a>
+                <a href="{{ route('owner.pembayaran.index', array_merge(request()->except('status'), ['status'=>'ditolak'])) }}"
+                   class="status-tab {{ $status=='ditolak' ? 'active' : '' }}">❌ Ditolak</a>
             </div>
         </form>
 
@@ -264,19 +278,18 @@
                             <th># ID</th>
                             <th>Penyewa</th>
                             <th>Kos / Durasi</th>
-                            <th>Tgl Transaksi</th>
+                            <th>Metode</th>
+                            <th>Tgl Pembayaran</th>
                             <th>Total Tagihan</th>
                             <th>Status Pembayaran</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($pembayarans as $i => $bayar)
-                        @php
-                            $sl = $bayar->status_label;
-                        @endphp
                         <tr>
                             <td style="color:var(--text-light);font-size:12px;font-weight:600;">
-                                TRX-{{ str_pad($bayar->id, 5, '0', STR_PAD_LEFT) }}
+                                PAY-{{ str_pad($bayar->id, 5, '0', STR_PAD_LEFT) }}
                             </td>
 
                             {{-- Penyewa --}}
@@ -300,20 +313,29 @@
                             <td>
                                 <a href="{{ route('kos.show', $bayar->kos->id) }}" class="kos-name" target="_blank">{{ $bayar->kos->nama ?? '-' }}</a>
                                 <div style="font-size:11px;color:var(--text-light);margin-top:2px;">
-                                    Sewa {{ $bayar->durasi ?? 0 }} bulan
+                                    Sewa {{ $bayar->booking->durasi ?? 0 }} bulan
                                 </div>
+                            </td>
+
+                            {{-- Metode Pembayaran --}}
+                            <td>
+                                <span style="font-weight:600; text-transform:capitalize;">{{ $bayar->metode_pembayaran }}</span>
                             </td>
 
                             {{-- Tanggal --}}
                             <td>
-                                <div style="font-weight:600;font-size:13px;">{{ $bayar->created_at->format('d M Y') }}</div>
-                                <div style="font-size:11px;color:var(--text-light);">{{ $bayar->created_at->format('H:i') }}</div>
+                                @if($bayar->tanggal_pembayaran)
+                                    <div style="font-weight:600;font-size:13px;">{{ $bayar->tanggal_pembayaran->format('d M Y') }}</div>
+                                    <div style="font-size:11px;color:var(--text-light);">{{ $bayar->tanggal_pembayaran->format('H:i') }}</div>
+                                @else
+                                    <span style="color:var(--text-light)">-</span>
+                                @endif
                             </td>
 
                             {{-- Total --}}
                             <td>
-                                @if($bayar->total)
-                                    <strong style="color:var(--text-dark);">Rp {{ number_format($bayar->total, 0, ',', '.') }}</strong>
+                                @if($bayar->booking && $bayar->booking->total)
+                                    <strong style="color:var(--text-dark);">Rp {{ number_format($bayar->booking->total, 0, ',', '.') }}</strong>
                                 @else
                                     <span style="color:var(--text-light)">-</span>
                                 @endif
@@ -321,12 +343,36 @@
 
                             {{-- Status --}}
                             <td>
-                                @if($bayar->status == 'pending')
-                                    <span class="badge badge-pending">⏳ Belum Lunas</span>
-                                @elseif(in_array($bayar->status, ['confirmed', 'active', 'completed']))
+                                @if($bayar->status_pembayaran == 'pending')
+                                    <span class="badge badge-pending">⏳ Pending</span>
+                                @elseif($bayar->status_pembayaran == 'lunas')
                                     <span class="badge badge-confirmed">✅ Lunas</span>
+                                @elseif($bayar->status_pembayaran == 'ditolak')
+                                    <span class="badge badge-cancelled">❌ Ditolak</span>
                                 @else
-                                    <span class="badge badge-cancelled">✕ Dibatalkan</span>
+                                    <span class="badge badge-cancelled">{{ ucfirst($bayar->status_pembayaran) }}</span>
+                                @endif
+                            </td>
+
+                            {{-- Aksi --}}
+                            <td>
+                                @if($bayar->status_pembayaran === 'pending')
+                                    <div style="display: flex; gap: 8px;">
+                                        <form action="{{ route('owner.pembayaran.konfirmasi', $bayar->id) }}" method="POST" onsubmit="return confirm('Konfirmasi pembayaran ini sebagai LUNAS?')">
+                                            @csrf
+                                            <button type="submit" style="background: var(--sage-deeper); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s;">
+                                                Konfirmasi Lunas
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('owner.pembayaran.tolak', $bayar->id) }}" method="POST" onsubmit="return confirm('Tolak pembayaran ini?')">
+                                            @csrf
+                                            <button type="submit" style="background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;">
+                                                Tolak
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <span style="color: var(--text-light); font-size: 12px; font-style: italic;">Selesai</span>
                                 @endif
                             </td>
                         </tr>

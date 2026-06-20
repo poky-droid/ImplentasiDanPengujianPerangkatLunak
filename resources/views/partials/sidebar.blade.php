@@ -20,6 +20,7 @@
     <!-- Menu Links -->
     <div style="display:flex; flex-direction:column; gap:28px;">
         <a href="/profile" style="color:#fff; text-decoration:none; font-size:16px; font-weight:500; transition:opacity .2s;" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Profile</a>
+        <a href="{{ route('booking.history') }}" style="color:#fff; text-decoration:none; font-size:16px; font-weight:500; transition:opacity .2s;" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Transaksi History</a>
         <a href="/syarat-ketentuan" style="color:#fff; text-decoration:none; font-size:16px; font-weight:500; transition:opacity .2s;" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Syarat & Ketentuan</a>
         <a href="/bantuan" style="color:#fff; text-decoration:none; font-size:16px; font-weight:500; transition:opacity .2s;" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Bantuan</a>
     </div>

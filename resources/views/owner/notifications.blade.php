@@ -220,6 +220,7 @@
             display: flex; align-items: center; gap: 10px;
         }
         .filter-btn {
+            display: inline-block; text-decoration: none;
             padding: 6px 16px; border-radius: 20px; font-family: 'DM Sans', sans-serif;
             font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border);
             background: var(--white); color: var(--text-mid); transition: all .2s;
@@ -278,16 +279,20 @@
             font-size: 10px; font-weight: 700; padding: 3px 10px;
             border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .tipe-booking    { background: #dbeafe; color: #1d4ed8; }
-        .tipe-pembayaran { background: #d1fae5; color: #065f46; }
-        .tipe-review     { background: #fef9c3; color: #92400e; }
-        .tipe-sistem     { background: #fee2e2; color: #991b1b; }
+        .tipe-booking     { background: #dbeafe; color: #1d4ed8; }
+        .tipe-pembayaran  { background: #d1fae5; color: #065f46; }
+        .tipe-review      { background: #fef9c3; color: #92400e; }
+        .tipe-sistem      { background: #fee2e2; color: #991b1b; }
+        .tipe-maintenance { background: #fee2e2; color: #991b1b; }
+        .tipe-chat        { background: #ede9fe; color: #6d28d9; }
+        .notif-icon.purple { background: #ede9fe; }
+        .notif-icon.purple svg { color: #7c3aed; }
         .notif-unread-dot {
             width: 8px; height: 8px; background: var(--sage); border-radius: 50%;
         }
 
         /* actions */
-        .notif-actions { flex-shrink: 0; display: flex; align-items: flex-start; gap: 8px; padding-top: 2px; }
+        .notif-actions { flex-shrink: 0; display: flex; align-items: flex-start; gap: 8px; padding-top: 2px; flex-direction: column; }
         .btn-read-one {
             font-size: 12px; font-weight: 600; color: var(--sage-dark);
             background: var(--sage-bg); border: 1px solid var(--border);
@@ -301,6 +306,14 @@
             font-size: 12px; color: var(--text-light); padding: 6px 0;
             display: flex; align-items: center; gap: 4px;
         }
+        .btn-detail {
+            font-size: 12px; font-weight: 600; color: var(--sage-deeper);
+            background: transparent; border: 1px solid var(--sage-light);
+            border-radius: 8px; padding: 5px 12px; cursor: pointer;
+            font-family: 'DM Sans', sans-serif; transition: all .2s;
+            white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+        }
+        .btn-detail:hover { background: var(--sage-bg); border-color: var(--sage); color: var(--sage-deeper); }
 
         /* ── Empty State ── */
         .empty-state {
@@ -459,7 +472,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="stat-mini-val">{{ $notifications->count() }}</div>
+                    <div class="stat-mini-val" id="statTotal">{{ $totalCount }}</div>
                     <div class="stat-mini-lbl">Total Notifikasi</div>
                 </div>
             </div>
@@ -472,7 +485,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="stat-mini-val">{{ $unreadCount }}</div>
+                    <div class="stat-mini-val" id="statUnread">{{ $unreadCount }}</div>
                     <div class="stat-mini-lbl">Belum Dibaca</div>
                 </div>
             </div>
@@ -483,7 +496,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="stat-mini-val">{{ $notifications->where('is_read', true)->count() }}</div>
+                    <div class="stat-mini-val" id="statRead">{{ $readCount }}</div>
                     <div class="stat-mini-lbl">Sudah Dibaca</div>
                 </div>
             </div>
@@ -491,6 +504,34 @@
 
         <!-- Notification Card -->
         <div class="notif-card">
+
+            {{-- Filter Tabs --}}
+            <div class="notif-filters">
+                <a href="{{ route('owner.notifications') }}"
+                   class="filter-btn {{ !$filter ? 'active' : '' }}">
+                    Semua
+                </a>
+                <a href="{{ route('owner.notifications', ['filter' => 'booking']) }}"
+                   class="filter-btn {{ $filter === 'booking' ? 'active' : '' }}">
+                    Booking
+                </a>
+                <a href="{{ route('owner.notifications', ['filter' => 'pembayaran']) }}"
+                   class="filter-btn {{ $filter === 'pembayaran' ? 'active' : '' }}">
+                    Pembayaran
+                </a>
+                <a href="{{ route('owner.notifications', ['filter' => 'chat']) }}"
+                   class="filter-btn {{ $filter === 'chat' ? 'active' : '' }}">
+                    Chat
+                </a>
+                <a href="{{ route('owner.notifications', ['filter' => 'maintenance']) }}"
+                   class="filter-btn {{ $filter === 'maintenance' ? 'active' : '' }}">
+                    Maintenance
+                </a>
+                <a href="{{ route('owner.notifications', ['filter' => 'sistem']) }}"
+                   class="filter-btn {{ $filter === 'sistem' ? 'active' : '' }}">
+                    Sistem
+                </a>
+            </div>
 
             @if($notifications->count() > 0)
                 <div class="notif-list" id="notifList">
@@ -512,6 +553,14 @@
                                 @elseif($notif->tipe === 'review')
                                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                @elseif($notif->tipe === 'maintenance')
+                                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                                    </svg>
+                                @elseif($notif->tipe === 'chat')
+                                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                                     </svg>
                                 @else
                                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -561,6 +610,17 @@
                                         Dibaca
                                     </span>
                                 @endif
+
+                                {{-- Tombol Lihat Detail (jika ada reference URL) --}}
+                                @if($notif->reference_url)
+                                    <a href="{{ $notif->reference_url }}" class="btn-detail">
+                                        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        Lihat Detail
+                                    </a>
+                                @endif
                             </div>
 
                         </div>
@@ -577,7 +637,11 @@
                         </svg>
                     </div>
                     <h3>Belum Ada Notifikasi</h3>
-                    <p>Notifikasi terkait booking, pembayaran,<br>dan ulasan akan muncul di sini.</p>
+                    @if($filter)
+                        <p>Tidak ada notifikasi dengan tipe <strong>{{ ucfirst($filter) }}</strong> saat ini.</p>
+                    @else
+                        <p>Notifikasi terkait booking, pembayaran, chat,<br>dan maintenance akan muncul di sini.</p>
+                    @endif
                 </div>
             @endif
 
@@ -617,16 +681,15 @@
                 const row = document.getElementById('notif-row-' + id);
                 if (row) {
                     row.classList.remove('unread');
-                    // Hapus garis hijau kiri dengan menghapus style before (via class)
-                    // Ganti tombol dengan label "Dibaca"
-                    const actDiv = btn.closest('.notif-actions');
-                    actDiv.innerHTML = `
-                        <span class="read-label">
-                            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
-                            Dibaca
-                        </span>`;
+                    // Ganti hanya tombol "Tandai Dibaca" → label "Dibaca"
+                    // (bukan seluruh actDiv, agar tombol "Lihat Detail" tetap ada)
+                    const readBtn = document.getElementById('btn-read-' + id);
+                    if (readBtn) {
+                        const readLabel = document.createElement('span');
+                        readLabel.className = 'read-label';
+                        readLabel.innerHTML = `<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Dibaca`;
+                        readBtn.replaceWith(readLabel);
+                    }
                     // Hapus dot belum dibaca
                     const dot = row.querySelector('.notif-unread-dot');
                     if (dot) dot.remove();
@@ -667,15 +730,16 @@
             if (newVal === 0) navBadge.remove();
             else navBadge.textContent = newVal;
         }
-        // Update stat card belum dibaca
-        const statMini = document.querySelectorAll('.stat-mini-val');
-        if (statMini[1]) {
-            let cur = parseInt(statMini[1].textContent) || 0;
-            statMini[1].textContent = Math.max(0, cur + delta);
+        // Update stat card belum dibaca & sudah dibaca
+        const statUnread = document.getElementById('statUnread');
+        const statRead   = document.getElementById('statRead');
+        if (statUnread) {
+            let cur = parseInt(statUnread.textContent) || 0;
+            statUnread.textContent = Math.max(0, cur + delta);
         }
-        if (statMini[2]) {
-            let cur = parseInt(statMini[2].textContent) || 0;
-            statMini[2].textContent = Math.max(0, cur - delta);
+        if (statRead) {
+            let cur = parseInt(statRead.textContent) || 0;
+            statRead.textContent = Math.max(0, cur - delta);
         }
     }
 

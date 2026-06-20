@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
     Route::get('/chat/{kos_id}', [ChatController::class, 'index'])->name('chat.index');
     Route::post('/chat/kirim', [ChatController::class, 'send'])->name('chat.kirim');
+    // Legacy/alternate route name used by views: chat.send
+    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
 
     // Favorit
     Route::post('/favorit/{kos_id}/toggle', [FavoritController::class, 'toggle'])->name('favorit.toggle');

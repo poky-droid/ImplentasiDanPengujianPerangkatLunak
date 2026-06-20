@@ -169,6 +169,13 @@
         }
         .chat-item.active .chat-unread { background: #fff; color: var(--sage-deeper); }
 
+        .chat-empty-sidebar {
+            font-size: 12px;
+            color: var(--text-light);
+            padding: 12px 8px;
+            text-align: center;
+        }
+
         /* ─── CHAT MAIN ─── */
         .chat-main {
             flex: 1;
@@ -256,6 +263,7 @@
             border-radius: 16px;
             font-size: 13px;
             line-height: 1.5;
+            word-break: break-word;
         }
         .msg-wrap.sent .msg-bubble {
             background: #e8f0ee;
@@ -388,7 +396,7 @@
 
     <!-- SIDEBAR CHAT LIST -->
     <div class="chat-sidebar">
-        <button class="btn-pesan">
+        <button class="btn-pesan" type="button">
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
@@ -396,43 +404,27 @@
         </button>
 
         <div class="chat-list">
-            {{-- Loop chat dari database --}}
-            {{-- @foreach($chats as $chat) --}}
-
-            <!-- Active chat item -->
-            <div class="chat-item active" onclick="openChat(this)">
-                <div class="chat-avatar">
-                    <span class="chat-avatar-initials">KA</span>
-                </div>
-                <div class="chat-item-info">
-                    <div class="chat-item-name">{{ $owner->name ?? 'Kost Andini' }}</div>
-                    <div class="chat-item-last">Online</div>
-                </div>
-            </div>
-
-            <!-- Other chat items -->
-            <div class="chat-item" onclick="openChat(this)">
-                <div class="chat-avatar">
-                    <span class="chat-avatar-initials">KA</span>
-                </div>
-                <div class="chat-item-info">
-                    <div class="chat-item-name">Kost Andini</div>
-                    <div class="chat-item-last">Baik, terima kasih...</div>
-                </div>
-                <div class="chat-unread">2</div>
-            </div>
-
-            <div class="chat-item" onclick="openChat(this)">
-                <div class="chat-avatar">
-                    <span class="chat-avatar-initials">KA</span>
-                </div>
-                <div class="chat-item-info">
-                    <div class="chat-item-name">Kost Andini</div>
-                    <div class="chat-item-last">Silakan datang...</div>
-                </div>
-            </div>
-
-            {{-- @endforeach --}}
+            @forelse($conversations as $conv)
+                @php
+                    // Tentukan siapa lawan bicara di percakapan ini
+                    $lawan = $conv->sender_id === Auth::id() ? $conv->receiver : $conv->sender;
+                @endphp
+                <a href="{{ route('chat.index', $conv->kos_id) }}" style="text-decoration:none; color:inherit;">
+                    <div class="chat-item {{ (int) $conv->kos_id === (int) $kos->id ? 'active' : '' }}">
+                        <div class="chat-avatar">
+                            <div class="chat-avatar-initials">
+                                {{ strtoupper(substr($lawan->name ?? 'U', 0, 2)) }}
+                            </div>
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-name">{{ $lawan->name ?? 'Pengguna' }}</div>
+                            <div class="chat-item-last">{{ \Illuminate\Support\Str::limit($conv->pesan, 28) }}</div>
+                        </div>
+                    </div>
+                </a>
+            @empty
+                <div class="chat-empty-sidebar">Belum ada percakapan</div>
+            @endforelse
         </div>
     </div>
 
@@ -442,10 +434,12 @@
         <!-- Header -->
         <div class="chat-header">
             <div class="chat-header-avatar">
-                <span style="font-size:16px;font-weight:700;color:var(--sage-deeper)">KA</span>
+                <span style="font-size:16px;font-weight:700;color:var(--sage-deeper)">
+                    {{ strtoupper(substr($receiver->name ?? 'U', 0, 2)) }}
+                </span>
             </div>
             <div class="chat-header-info">
-                <div class="chat-header-name">{{ $owner->name ?? 'Kost Andini' }}</div>
+                <div class="chat-header-name">{{ $receiver->name ?? 'Pemilik Kos' }}</div>
                 <div class="chat-header-status">
                     <div class="status-dot"></div>
                     Online
@@ -458,90 +452,67 @@
 
             <div class="msg-date">Hari ini</div>
 
-            {{-- Loop pesan dari database --}}
-            {{-- @foreach($messages as $msg) --}}
-            {{-- @if($msg->sender_id === Auth::id()) --}}
-
-            <!-- Pesan terkirim (kanan) -->
-            <div class="msg-wrap sent">
-                <div>
-                    <div class="msg-bubble">
-                        Permisi mas aku mau cek, apakah kost masih tersedia atau tidak ya mas?
+            @forelse($messages as $msg)
+                @if($msg->sender_id === Auth::id())
+                    <div class="msg-wrap sent">
+                        <div>
+                            <div class="msg-bubble">{{ $msg->pesan }}</div>
+                            <div class="msg-time">{{ $msg->created_at->format('H:i') }}</div>
+                        </div>
                     </div>
-                    <div class="msg-time">10:30</div>
+                @else
+                    <div class="msg-wrap received">
+                        <div class="msg-avatar">
+                            {{ strtoupper(substr($receiver->name ?? 'U', 0, 2)) }}
+                        </div>
+                        <div>
+                            <div class="msg-bubble">{{ $msg->pesan }}</div>
+                            <div class="msg-time">{{ $msg->created_at->format('H:i') }}</div>
+                        </div>
+                    </div>
+                @endif
+            @empty
+                <div class="chat-empty">
+                    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <p>Belum ada pesan. Mulai percakapan sekarang.</p>
                 </div>
-            </div>
-
-            {{-- @else --}}
-            <!-- Pesan diterima (kiri) -->
-            {{-- <div class="msg-wrap received">
-                <div class="msg-avatar">KA</div>
-                <div>
-                    <div class="msg-bubble">{{ $msg->pesan }}</div>
-                    <div class="msg-time">{{ $msg->created_at->format('H:i') }}</div>
-                </div>
-            </div> --}}
-            {{-- @endif --}}
-            {{-- @endforeach --}}
+            @endforelse
 
         </div>
 
         <!-- Input -->
-        <div class="chat-input-wrap">
+        <form action="{{ route('chat.send') }}" method="POST" class="chat-input-wrap">
+            @csrf
+            <input type="hidden" name="kos_id" value="{{ $kos->id }}">
+            <input type="hidden" name="receiver_id" value="{{ $receiver->id }}">
             <input
                 type="text"
+                name="pesan"
                 class="chat-input"
                 id="chat-input"
                 placeholder="Ketik pesan..."
-                onkeydown="if(event.key==='Enter') kirimPesan()"
+                required
+                autocomplete="off"
             >
-            <button class="btn-send" onclick="kirimPesan()">
+            <button type="submit" class="btn-send">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2">
                     <line x1="22" y1="2" x2="11" y2="13"/>
                     <polygon points="22 2 15 22 11 13 2 9 22 2"/>
                 </svg>
             </button>
-        </div>
+        </form>
 
     </div>
 
 </div>
 
 <script>
-    // Scroll ke bawah otomatis
+    // Scroll otomatis ke pesan terbaru saat halaman dimuat
     const msgContainer = document.getElementById('chat-messages');
-    msgContainer.scrollTop = msgContainer.scrollHeight;
-
-    // Kirim pesan (UI only, sambungkan ke backend via AJAX)
-    function kirimPesan() {
-        const input = document.getElementById('chat-input');
-        const teks  = input.value.trim();
-        if (!teks) return;
-
-        const wrap = document.createElement('div');
-        wrap.className = 'msg-wrap sent';
-        wrap.innerHTML = `
-            <div>
-                <div class="msg-bubble">${teks}</div>
-                <div class="msg-time">${waktuSekarang()}</div>
-            </div>
-        `;
-        msgContainer.appendChild(wrap);
+    if (msgContainer) {
         msgContainer.scrollTop = msgContainer.scrollHeight;
-        input.value = '';
-
-        // TODO: kirim ke backend via fetch/axios
-        // fetch('/chat/kirim', { method: 'POST', body: ... })
-    }
-
-    function waktuSekarang() {
-        const now = new Date();
-        return now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-    }
-
-    function openChat(el) {
-        document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
     }
 </script>
 

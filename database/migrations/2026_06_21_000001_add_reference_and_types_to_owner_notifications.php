@@ -26,7 +26,12 @@ return new class extends Migration
         });
 
         // Perluas ENUM tipe supaya mendukung 'maintenance' dan 'chat'
-        \DB::statement("ALTER TABLE owner_notifications MODIFY COLUMN tipe ENUM('booking','pembayaran','review','sistem','maintenance','chat') NOT NULL DEFAULT 'sistem'");
+        // NOTE: SQLite (used by tests) doesn't support ALTER ... MODIFY for ENUMs.
+        // Run the raw ALTER only on MySQL-like drivers; skip on sqlite.
+        $driver = Schema::getConnection()->getDriverName();
+        if ($driver === 'mysql' || $driver === 'mysqli') {
+            \DB::statement("ALTER TABLE owner_notifications MODIFY COLUMN tipe ENUM('booking','pembayaran','review','sistem','maintenance','chat') NOT NULL DEFAULT 'sistem'");
+        }
     }
 
     /**
@@ -39,6 +44,10 @@ return new class extends Migration
         });
 
         // Kembalikan ENUM ke nilai semula
-        \DB::statement("ALTER TABLE owner_notifications MODIFY COLUMN tipe ENUM('booking','pembayaran','review','sistem') NOT NULL DEFAULT 'sistem'");
+        // Only run on MySQL-like drivers; skip on sqlite where it's unsupported.
+        $driver = Schema::getConnection()->getDriverName();
+        if ($driver === 'mysql' || $driver === 'mysqli') {
+            \DB::statement("ALTER TABLE owner_notifications MODIFY COLUMN tipe ENUM('booking','pembayaran','review','sistem') NOT NULL DEFAULT 'sistem'");
+        }
     }
 };

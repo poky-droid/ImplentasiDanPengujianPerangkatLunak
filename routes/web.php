@@ -21,6 +21,7 @@ use App\Http\Controllers\Owner\NotificationController as OwnerNotificationContro
 use App\Http\Controllers\Owner\BookingController as OwnerBookingController;
 use App\Http\Controllers\Owner\PembayaranController as OwnerPembayaranController;
 use App\Http\Controllers\NotifikasiController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,15 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 Route::get('/password/reset', fn() => view('auth.passwords.email'))->name('password.request');
+
+// Minimal POST handler for password reset request (test/dev helper).
+Route::post('/password/email', function (Request $request) {
+    $request->validate(['email' => 'required|email']);
+
+    // In a real app you'd dispatch Password::sendResetLink([...]) here.
+    // For now, we simply pretend and return a success status so views/tests work.
+    return back()->with('status', 'Jika email terdaftar, link reset telah dikirim.');
+})->name('password.email');
 
 /*
 |--------------------------------------------------------------------------

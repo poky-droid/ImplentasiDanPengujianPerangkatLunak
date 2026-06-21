@@ -10,4 +10,5 @@ class AuthLoginControllerTest extends TestCase
     {
         $this->assertTrue(class_exists('\App\\Http\\Controllers\\Auth\\LoginController'));
     }
+    
 }

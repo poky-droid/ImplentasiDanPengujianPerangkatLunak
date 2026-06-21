@@ -20,4 +20,12 @@ class Owner extends Model
     {
         return $this->hasMany(Properti::class);
     }
+
+    /**
+     * Relasi: semua kos milik owner ini.
+     */
+    public function kos()
+    {
+        return $this->hasMany(\App\Models\Kos::class, 'owner_id');
+    }
 }

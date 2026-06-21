@@ -34,17 +34,27 @@
             <tbody>
                 @forelse($pembayarans as $p)
                 <tr>
-                    <td style="font-weight:600;">{{ $p->owner->name ?? '-' }}</td>
-                    <td>{{ $p->kos->nama ?? '-' }}</td>
-                    <td class="td-muted">{{ $p->periode }}</td>
-                    <td style="font-weight:600;">Rp {{ number_format($p->jumlah, 0, ',', '.') }}</td>
+                    <td style="font-weight:600;">{{ $p->kos->owner->name ?? ($p->booking->user->name ?? '-') }}</td>
+                    <td>{{ $p->kos->nama ?? ($p->booking->kos->nama ?? '-') }}</td>
                     <td class="td-muted">
-                        {{ $p->tgl_transfer ? \Carbon\Carbon::parse($p->tgl_transfer)->format('d M Y') : '-' }}
+                        {{-- Periode: if you store a periode string on pembayaran, use it; otherwise derive from booking tanggal_sewa/durasi --}}
+                        @if(isset($p->periode))
+                            {{ $p->periode }}
+                        @elseif(isset($p->booking))
+                            {{ $p->booking->tanggal_sewa?->format('M Y') ?? '-' }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td style="font-weight:600;">Rp {{ number_format($p->booking->total ?? 0, 0, ',', '.') }}</td>
+                    <td class="td-muted">
+                        {{ $p->tanggal_pembayaran ? \Carbon\Carbon::parse($p->tanggal_pembayaran)->format('d M Y') : '-' }}
                     </td>
                     <td>
-                        @if($p->status === 'selesai')
+                        @php $status = $p->status_pembayaran ?? $p->status ?? 'pending'; @endphp
+                        @if($status === 'lunas' || $status === 'selesai')
                             <span class="badge badge-success">Selesai</span>
-                        @elseif($p->status === 'menunggu')
+                        @elseif($status === 'pending' || $status === 'menunggu')
                             <span class="badge badge-warning">Menunggu</span>
                         @else
                             <span class="badge badge-info">Diproses</span>

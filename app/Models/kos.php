@@ -55,7 +55,13 @@ class Kos extends Model
     {
         $fotos = $this->foto;
         if (!empty($fotos) && is_array($fotos) && isset($fotos[0])) {
-            return $fotos[0]; // path relatif dari storage/app/public/
+            $first = $fotos[0];
+            // If already a data URI (base64) return as-is
+            if (is_string($first) && str_starts_with($first, 'data:')) {
+                return $first;
+            }
+            // Otherwise assume it's a storage path (e.g. kos/xxx.jpg) and return asset URL
+            return asset('storage/' . ltrim($first, '/'));
         }
         return null;
     }
@@ -67,13 +73,12 @@ class Kos extends Model
         $images = [];
         if (!empty($fotos) && is_array($fotos)) {
             foreach ($fotos as $f) {
-                $images[] = 'storage/' . $f;
+                if (is_string($f) && str_starts_with($f, 'data:')) {
+                    $images[] = $f;
+                } else {
+                    $images[] = asset('storage/' . ltrim($f, '/'));
+                }
             }
-        }
-
-        // If no images exist, fill up with placeholder so gallery always has content
-        while (count($images) < 3) {
-            $images[] = 'images/default_kos.png';
         }
 
         return $images;
@@ -101,5 +106,11 @@ class Kos extends Model
     public function scopeTersedia($query)
     {
         return $query->where('kamar_tersedia', '>', 0);
+    }
+
+    // ── Scope: hanya kos yang aktif ─────────────────────
+    public function scopeAktif($query)
+    {
+        return $query->where('status', 'aktif');
     }
 }

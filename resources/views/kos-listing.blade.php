@@ -539,11 +539,21 @@
 
         @if(isset($kosList) && $kosList->count() > 0)
             @foreach($kosList as $kos)
+                @if(!isset($kos->status) || $kos->status !== 'aktif')
+                    @continue
+                @endif
             <div class="kos-card">
                 <div class="kos-img-wrap">
                     @if($kos->foto_utama)
-                        <img src="{{ asset('storage/' . $kos->foto_utama) }}" alt="{{ $kos->nama }}"
-                             style="width:100%;height:100%;object-fit:cover;">
+                        @php
+                            $img = $kos->foto_utama;
+                            if (is_string($img) && (str_starts_with($img, 'data:') || str_starts_with($img, 'http')) ) {
+                                $src = $img;
+                            } else {
+                                $src = asset('storage/' . ltrim($img, '/'));
+                            }
+                        @endphp
+                        <img src="{{ $src }}" alt="{{ $kos->nama }}" style="width:100%;height:100%;object-fit:cover;">
                     @else
                         <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d4c9b0,#a89878)">
                             <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>

@@ -269,6 +269,9 @@
                 <select name="kos_id" class="filter-select" onchange="this.form.submit()">
                     <option value="">Semua Kos</option>
                     @foreach($kosList as $k)
+                        @if(!isset($k->status) || $k->status !== 'aktif')
+                            @continue
+                        @endif
                     <option value="{{ $k->id }}" {{ $kosId == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
                     @endforeach
                 </select>

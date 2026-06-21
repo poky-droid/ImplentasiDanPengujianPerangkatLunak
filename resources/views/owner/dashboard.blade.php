@@ -836,6 +836,9 @@
                     </thead>
                     <tbody>
                         @foreach($kosList->take(6) as $kos)
+                            @if(!isset($kos->status) || $kos->status !== 'aktif')
+                                @continue
+                            @endif
                         @php
                             $badgeType = $kos->is_eksklusif ? 'badge-exclusive' : 'badge-' . $kos->tipe;
                             $badgeLabel = $kos->is_eksklusif ? 'Eksklusif' : ucfirst($kos->tipe);

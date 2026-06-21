@@ -89,7 +89,7 @@
                         <td>{{ $p->nama }}</td>
                         <td>{{ $p->properti }}</td>
                         <td>
-                            @if($p->status === 'disetujui')
+                            @if($p->status === 'aktif')
                                 <span class="badge badge-success">Disetujui</span>
                             @elseif($p->status === 'pending')
                                 <span class="badge badge-warning">Pending</span>

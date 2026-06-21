@@ -480,8 +480,12 @@
     {{-- Jika sudah ada data dari DB, ganti dengan @foreach($kos as $item) --}}
     <div class="kos-grid">
 
-        <!-- Card 1 -->
-        <div class="kos-card">
+        @foreach($kosList ?? $kos ?? [] as $kos)
+            @if(!isset($kos->status) || $kos->status !== 'aktif')
+                @continue
+            @endif
+
+            <div class="kos-card">
             <div class="kos-img-wrap">
                 <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#d4c9b0,#a89878)">
                     <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"><path d="M8 38V20l16-10 16 10v18"/><rect x="16" y="24" width="16" height="14" rx="1"/></svg>
@@ -672,8 +676,8 @@
             </div>
         </div>
 
+        @endforeach
     </div>
-    {{-- Akhir @foreach --}}
 
     <!-- PAGINATION -->
     <div class="pagination">

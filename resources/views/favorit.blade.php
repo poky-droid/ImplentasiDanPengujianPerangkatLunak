@@ -506,7 +506,10 @@
     <div class="kos-grid" id="favGrid">
 
         @forelse($favorit as $kos)
-        <div class="kos-card" id="card-{{ $kos->id }}">
+            @if(!isset($kos->status) || $kos->status !== 'aktif')
+                @continue
+            @endif
+            <div class="kos-card" id="card-{{ $kos->id }}">
             <div class="kos-img-wrap">
                 @if($kos->foto_utama)
                     <img src="{{ asset('storage/' . $kos->foto_utama) }}" alt="{{ $kos->nama }}" class="kos-img">

@@ -27,18 +27,18 @@
         <div class="filter-tabs">
             <a href="{{ route('admin.pengajuan.index') }}"
                class="btn {{ !request('status') ? 'btn-primary' : 'btn-outline' }}">
-                Tambah
+                Semua
             </a>
             <a href="{{ route('admin.pengajuan.index', ['status' => 'pending']) }}"
                class="btn {{ request('status') === 'pending' ? 'btn-primary' : 'btn-outline' }}">
                 Pending
             </a>
-            <a href="{{ route('admin.pengajuan.index', ['status' => 'disetujui']) }}"
-               class="btn {{ request('status') === 'disetujui' ? 'btn-primary' : 'btn-outline' }}">
+            <a href="{{ route('admin.pengajuan.index', ['status' => 'aktif']) }}"
+               class="btn {{ request('status') === 'aktif' ? 'btn-primary' : 'btn-outline' }}">
                 Disetujui
             </a>
-            <a href="{{ route('admin.pengajuan.index', ['status' => 'ditolak']) }}"
-               class="btn {{ request('status') === 'ditolak' ? 'btn-primary' : 'btn-outline' }}">
+            <a href="{{ route('admin.pengajuan.index', ['status' => 'nonaktif']) }}"
+               class="btn {{ request('status') === 'nonaktif' ? 'btn-primary' : 'btn-outline' }}">
                 Ditolak
             </a>
         </div>
@@ -57,35 +57,35 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($pengajuans as $p)
+                @forelse($pengajuans as $kos)
                 <tr>
-                    <td style="font-weight:600;">{{ $p->nama }}</td>
-                    <td class="td-muted">{{ $p->email }}</td>
-                    <td>{{ $p->properti }}</td>
-                    <td class="td-muted">{{ $p->created_at->format('d M Y') }}</td>
+                    <td style="font-weight:600;">{{ $kos->owner?->name ?? 'Pemilik' }}</td>
+                    <td class="td-muted">{{ $kos->owner?->email ?? '-' }}</td>
+                    <td>{{ $kos->nama }}</td>
+                    <td class="td-muted">{{ $kos->created_at->format('d M Y') }}</td>
                     <td>
-                        @if($p->status === 'disetujui')
-                            <span class="badge badge-success">Disetujui</span>
-                        @elseif($p->status === 'pending')
+                        @if($kos->status === 'aktif')
+                            <span class="badge badge-success">Aktif</span>
+                        @elseif($kos->status === 'pending')
                             <span class="badge badge-warning">Pending</span>
                         @else
-                            <span class="badge badge-danger">Ditolak</span>
+                            <span class="badge badge-danger">Nonaktif</span>
                         @endif
                     </td>
                     <td>
                         <div class="action-group">
-                            <button class="btn-icon" title="Detail" onclick="openModal('modalDetail{{ $p->id }}')">
+                            <button class="btn-icon" title="Detail" onclick="openModal('modalDetail{{ $kos->id }}')">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
-                            @if($p->status === 'pending')
-                            <form method="POST" action="{{ route('admin.pengajuan.setujui', $p->id) }}" style="display:inline;">
+                            @if($kos->status === 'pending')
+                            <form method="POST" action="{{ route('admin.pengajuan.setujui', $kos->id) }}" style="display:inline;">
                                 @csrf
                                 @method('PUT')
                                 <button type="submit" class="btn-icon" title="Setujui" style="border-color:#a7f3d0; color:#059669;">
                                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                                 </button>
                             </form>
-                            <form method="POST" action="{{ route('admin.pengajuan.tolak', $p->id) }}" style="display:inline;">
+                            <form method="POST" action="{{ route('admin.pengajuan.tolak', $kos->id) }}" style="display:inline;">
                                 @csrf
                                 @method('PUT')
                                 <button type="submit" class="btn-icon danger" title="Tolak">
@@ -98,43 +98,39 @@
                 </tr>
 
                 <!-- MODAL DETAIL -->
-                <div class="modal-overlay" id="modalDetail{{ $p->id }}">
+                <div class="modal-overlay" id="modalDetail{{ $kos->id }}">
                     <div class="modal" style="max-width:520px;">
-                        <h3 class="modal-title">Detail Pengajuan Mitra</h3>
+                        <h3 class="modal-title">Detail Pengajuan Kos</h3>
                         <div style="display:grid; gap:14px;">
                             <div>
-                                <div style="font-size:12px; color:#9ca3af; font-weight:600; margin-bottom:4px;">NAMA</div>
-                                <div style="font-weight:600;">{{ $p->nama }}</div>
+                                <div style="font-size:12px; color:#9ca3af; font-weight:600; margin-bottom:4px;">NAMA KOS</div>
+                                <div style="font-weight:600;">{{ $kos->nama }}</div>
                             </div>
                             <div>
-                                <div style="font-size:12px; color:#9ca3af; font-weight:600; margin-bottom:4px;">EMAIL</div>
-                                <div class="td-muted">{{ $p->email }}</div>
-                            </div>
-                            <div>
-                                <div style="font-size:12px; color:#9ca3af; font-weight:600; margin-bottom:4px;">PROPERTI</div>
-                                <div>{{ $p->properti }}</div>
+                                <div style="font-size:12px; color:#9ca3af; font-weight:600; margin-bottom:4px;">PEMILIK</div>
+                                <div class="td-muted">{{ $kos->owner?->name ?? '-' }} &mdash; {{ $kos->owner?->email ?? '-' }}</div>
                             </div>
                             <div>
                                 <div style="font-size:12px; color:#9ca3af; font-weight:600; margin-bottom:4px;">ALAMAT</div>
-                                <div class="td-muted">{{ $p->alamat ?? '-' }}</div>
+                                <div>{{ $kos->alamat ?? '-' }}</div>
                             </div>
                             <div>
                                 <div style="font-size:12px; color:#9ca3af; font-weight:600; margin-bottom:4px;">TANGGAL PENGAJUAN</div>
-                                <div class="td-muted">{{ $p->created_at->format('d M Y, H:i') }}</div>
+                                <div class="td-muted">{{ $kos->created_at->format('d M Y, H:i') }}</div>
                             </div>
                             <div>
                                 <div style="font-size:12px; color:#9ca3af; font-weight:600; margin-bottom:4px;">STATUS</div>
-                                @if($p->status === 'disetujui')
-                                    <span class="badge badge-success">Disetujui</span>
-                                @elseif($p->status === 'pending')
+                                @if($kos->status === 'aktif')
+                                    <span class="badge badge-success">Aktif</span>
+                                @elseif($kos->status === 'pending')
                                     <span class="badge badge-warning">Pending</span>
                                 @else
-                                    <span class="badge badge-danger">Ditolak</span>
+                                    <span class="badge badge-danger">Nonaktif</span>
                                 @endif
                             </div>
                         </div>
                         <div class="modal-actions">
-                            <button type="button" class="btn btn-outline" onclick="closeModal('modalDetail{{ $p->id }}')">Tutup</button>
+                            <button type="button" class="btn btn-outline" onclick="closeModal('modalDetail{{ $kos->id }}')">Tutup</button>
                         </div>
                     </div>
                 </div>

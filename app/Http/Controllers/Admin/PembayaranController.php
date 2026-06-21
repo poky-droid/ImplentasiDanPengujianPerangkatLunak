@@ -11,56 +11,21 @@ class PembayaranController extends Controller
 {
     public function index()
     {
-        // Mock data for payments
-        $mockPembayarans = [
-            (object)[
-                'id' => 1,
-                'owner' => (object)['name' => 'Owner 1'],
-                'kos' => (object)['nama' => 'Kos A'],
-                'periode' => 'Januari 2026',
-                'jumlah' => 5000000,
-                'tgl_transfer' => '2026-05-20',
-                'status' => 'selesai'
-            ],
-            (object)[
-                'id' => 2,
-                'owner' => (object)['name' => 'Owner 2'],
-                'kos' => (object)['nama' => 'Kos B'],
-                'periode' => 'Februari 2026',
-                'jumlah' => 3500000,
-                'tgl_transfer' => null,
-                'status' => 'menunggu'
-            ],
-            (object)[
-                'id' => 3,
-                'owner' => (object)['name' => 'Owner 3'],
-                'kos' => (object)['nama' => 'Kos C'],
-                'periode' => 'Maret 2026',
-                'jumlah' => 4200000,
-                'tgl_transfer' => '2026-05-18',
-                'status' => 'selesai'
-            ],
-        ];
+        // Fetch real pembayaran records from database, eager-load booking, kos and owner
+        $pembayarans = \App\Models\Pembayaran::with(['booking.kos', 'kos.owner'])
+            ->latest()
+            ->paginate(15);
 
-        // Paginate the mock data
-        $page = request()->get('page', 1);
-        $perPage = 15;
-        $pembayarans = new LengthAwarePaginator(
-            array_slice($mockPembayarans, ($page - 1) * $perPage, $perPage),
-            count($mockPembayarans),
-            $perPage,
-            $page,
-            ['path' => route('admin.pembayaran.index')]
-        );
+        // The amount for a pembayaran is stored on the related booking (booking.total).
+        // Sum booking.total for payments that are marked as paid ('lunas')
+        $totalDibayarkan = \App\Models\Pembayaran::where('status_pembayaran', 'lunas')
+            ->join('bookings', 'pembayarans.booking_id', '=', 'bookings.id')
+            ->sum('bookings.total');
 
-        // Calculate totals
-        $totalDibayarkan = collect($mockPembayarans)
-            ->where('status', 'selesai')
-            ->sum('jumlah');
-        
-        $menungguTransfer = collect($mockPembayarans)
-            ->where('status', 'menunggu')
-            ->sum('jumlah');
+        // Sum booking.total for payments that are pending confirmation
+        $menungguTransfer = \App\Models\Pembayaran::where('status_pembayaran', 'pending')
+            ->join('bookings', 'pembayarans.booking_id', '=', 'bookings.id')
+            ->sum('bookings.total');
 
         return view('admin.pembayaran', compact('pembayarans', 'totalDibayarkan', 'menungguTransfer'));
     }

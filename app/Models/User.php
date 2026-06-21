@@ -53,6 +53,16 @@ class User extends Authenticatable
         return $this->hasMany(Booking::class);
     }
 
+    public function propertis()
+    {
+        return $this->hasMany(\App\Models\Properti::class, 'owner_id');
+    }
+
+    public function kos()
+    {
+        return $this->hasMany(\App\Models\Kos::class, 'owner_id');
+    }
+
     public function reviews()
     {
         return $this->hasMany(Review::class);

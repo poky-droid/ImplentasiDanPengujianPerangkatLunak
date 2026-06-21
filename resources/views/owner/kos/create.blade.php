@@ -620,7 +620,7 @@
                                     <select id="status" name="status"
                                         class="form-control {{ $errors->has('status') ? 'is-invalid' : '' }}"
                                         required>
-                                        <option value="aktif"    {{ old('status', 'aktif') == 'aktif'    ? 'selected' : '' }}>Aktif</option>
+                                        <option value="pending"    {{ old('status', 'pending') == 'pending'    ? 'selected' : '' }}>Ajukan</option>
                                         <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                                     </select>
                                     @error('status') <span class="invalid-msg">{{ $message }}</span> @enderror
@@ -866,8 +866,9 @@
 
     function handleFileSelect(e) {
         addFiles(e.target.files);
-        // Reset input so same files can be re-selected if needed
-        e.target.value = '';
+        // Do not clear the input here; keeping the FileList allows the files to be
+        // submitted with the form. The upload component maintains `selectedFiles`
+        // and syncs it into the input via syncFileInput().
     }
 
     function handleDragOver(e) {

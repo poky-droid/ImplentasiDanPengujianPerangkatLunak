@@ -9,7 +9,14 @@ class KosController extends Controller
 {
     public function index()
     {
-        $kosList = Kos::tersedia()->latest()->paginate(8);
+        $kosList = Kos::tersedia()
+            ->aktif()
+            ->whereHas('owner', function ($q) {
+                $q->where('status', 'aktif');
+            })
+            ->latest()
+            ->paginate(12);
+
         return view('kos-listing', compact('kosList'));
     }
 
@@ -17,7 +24,7 @@ class KosController extends Controller
     {
         $kategori = $request->get('kategori');
 
-        $query = Kos::query();
+    $query = Kos::tersedia()->aktif(); // hanya kos berstatus aktif yang tampil ke publik
 
         if ($kategori === 'exclusive') {
             $query->where('is_eksklusif', true);
@@ -32,7 +39,8 @@ class KosController extends Controller
 
     public function show($id)
     {
-        $kos = Kos::findOrFail($id);
+        // hanya kos aktif yang bisa dibuka detailnya oleh publik
+        $kos = Kos::tersedia()->findOrFail($id);
         return view('kos.kos-detail', compact('kos'));
     }
 

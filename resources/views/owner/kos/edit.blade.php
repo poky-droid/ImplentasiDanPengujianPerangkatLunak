@@ -601,13 +601,52 @@
         document.getElementById('foto-input').files = dt.files;
     }
 
-    function handleFileSelect(e) { addFiles(e.target.files); e.target.value = ''; }
+    function handleFileSelect(e) { addFiles(e.target.files); }
     function handleDragOver(e)  { e.preventDefault(); document.getElementById('upload-zone').classList.add('dragover'); }
     function handleDragLeave(e) { document.getElementById('upload-zone').classList.remove('dragover'); }
     function handleDrop(e)      { e.preventDefault(); document.getElementById('upload-zone').classList.remove('dragover'); addFiles(e.dataTransfer.files); }
 
     /* ── Submit loading ── */
     document.getElementById('kos-form').addEventListener('submit', function () {
+        // make sure file input is synced with selectedFiles before submit
+        syncFileInput();
+        const fotoInput = document.getElementById('foto-input');
+        // If browser prevented programmatic assignment to input.files, fallback to embedding base64 data
+        if (fotoInput.files.length === 0 && selectedFiles.length > 0) {
+            // prevent default submit until we embed base64 inputs
+            event.preventDefault();
+            const form = document.getElementById('kos-form');
+            // read files as data URIs
+            const readers = selectedFiles.map((f) => new Promise((res, rej) => {
+                const r = new FileReader();
+                r.onload = () => res({ name: f.name, data: r.result });
+                r.onerror = rej;
+                r.readAsDataURL(f);
+            }));
+            Promise.all(readers).then(results => {
+                results.forEach((it, idx) => {
+                    const hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.name = 'foto_baru_data[]';
+                    hidden.value = it.data;
+                    form.appendChild(hidden);
+                });
+                // proceed with visual submit state
+                const btn = document.getElementById('submit-btn');
+                btn.disabled = true;
+                btn.innerHTML = `
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="animation:spin .8s linear infinite;">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    Menyimpan...
+                `;
+                form.submit();
+            }).catch(err => {
+                alert('Gagal memproses file sebelum submit. Coba ulangi.');
+            });
+            return;
+        }
+
         const btn = document.getElementById('submit-btn');
         btn.disabled = true;
         btn.innerHTML = `

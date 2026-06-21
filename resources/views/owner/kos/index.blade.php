@@ -104,6 +104,7 @@
         .badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
         .badge-active   { background: #E8F5E9; color: #2E7D32; }
         .badge-inactive { background: #FFF3E0; color: #E65100; }
+    .badge-pending  { background: #FFF9E8; color: #C9A84C; }
         .badge-putri    { background: #FFE8EF; color: #C0516A; }
         .badge-putra    { background: #E8F0FF; color: #4A6BC0; }
         .badge-campur   { background: #E8F5E9; color: #2E7D32; }
@@ -265,6 +266,9 @@
                     </thead>
                     <tbody>
                         @foreach($kosList as $kos)
+                            @if(!isset($kos->status) || $kos->status !== 'aktif')
+                                @continue
+                            @endif
                         @php
                             $badgeType  = $kos->is_eksklusif ? 'badge-exclusive' : 'badge-' . $kos->tipe;
                             $badgeLabel = $kos->is_eksklusif ? 'Eksklusif' : ucfirst($kos->tipe);
@@ -295,7 +299,9 @@
                                 <small style="color:var(--text-light)"> kamar</small>
                             </td>
                             <td>
-                                @if(isset($kos->status) && $kos->status === 'nonaktif')
+                                @if(isset($kos->status) && $kos->status === 'pending')
+                                    <span class="badge badge-pending">Pending</span>
+                                @elseif(isset($kos->status) && $kos->status === 'nonaktif')
                                     <span class="badge badge-inactive">Nonaktif</span>
                                 @else
                                     <span class="badge badge-active">Aktif</span>

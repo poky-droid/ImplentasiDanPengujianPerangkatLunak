@@ -617,10 +617,7 @@
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                 Pembayaran
             </a>
-            <a href="{{ route('admin.komplain.index') }}" class="nav-item {{ request()->routeIs('admin.komplain.*') ? 'active' : '' }}">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                Komplain
-            </a>
+            
         @endif
     </nav>
     <div class="sidebar-footer">

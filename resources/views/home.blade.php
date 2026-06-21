@@ -589,7 +589,12 @@
     </div>
 
     <div class="kos-grid">
+    @php $activeCount = 0; @endphp
     @forelse ($kosList as $kos)
+        @if(!isset($kos->status) || $kos->status !== 'aktif')
+            @continue
+        @endif
+        @php $activeCount++; @endphp
         <a href="{{ route('kos.show', $kos->id) }}" class="kos-card" style="display:block; text-decoration:none; color:inherit;">
             <div class="kos-img-placeholder" style="background: linear-gradient(135deg,#c9d9ca,#9ab09c)">
                 @if($kos->foto_utama)
@@ -618,6 +623,9 @@
     @empty
         <p style="color: var(--text-light); font-size: 13px;">Belum ada kos yang tersedia saat ini.</p>
     @endforelse
+    @if(isset($activeCount) && $activeCount === 0)
+        <p style="color: var(--text-light); font-size: 13px;">Belum ada kos aktif yang tersedia saat ini.</p>
+    @endif
 </div>
 </section>
 

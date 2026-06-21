@@ -11,10 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookings', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('kamar_id')->constrained()->onDelete('cascade');
+      Schema::create('bookings', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('user_id');
+        $table->foreign('user_id', 'bookings_user_id_fk')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade');
+        $table->unsignedBigInteger('kamar_id');
+        $table->foreign('kamar_id', 'bookings_kamar_id_fk')
+            ->references('id')
+            ->on('kamars')
+            ->onDelete('cascade');
             $table->date('tanggal_sewa');
             $table->string('status');
             $table->timestamps();

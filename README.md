@@ -6,3 +6,7 @@ Nama Anggota 	:
 -	Wildan Filza Al Faiz 
 -	Arliey Januar Arrohman Putra Mazzimo 
 -	Mutiara Fauziah 
+
+
+ERROR :
+Chat belum bisa ke tampil karena (Solve)

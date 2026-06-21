@@ -6,35 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chat extends Model
 {
-    protected $table = 'chat';
-    protected $primaryKey = 'id_chat';
+    protected $table = 'chats';
 
     protected $fillable = [
-        'user_id',
-        'owner_id',
+        'sender_id',
+        'receiver_id',
+        'kos_id',
         'pesan',
-        'waktu'
+        'dibaca',
     ];
 
-    public $timestamps = false;
+    protected $casts = [
+        'dibaca' => 'boolean',
+    ];
 
-    public function user()
+    // ── Relasi ──────────────────────────────────────────
+    public function sender()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function owner()
+    public function receiver()
     {
-        return $this->belongsTo(Owner::class);
+        return $this->belongsTo(User::class, 'receiver_id');
     }
 
-    public function kirimPesan()
+    public function kos()
     {
-        return "Pesan berhasil dikirim: " . $this->pesan;
-    }
-
-    public function terimaPesan()
-    {
-        return "Pesan diterima pada " . $this->waktu . ": " . $this->pesan;
+        return $this->belongsTo(Kos::class, 'kos_id');
     }
 }
